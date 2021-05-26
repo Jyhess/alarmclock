@@ -2,6 +2,7 @@
 #include "timed_capacitive_sensor.h"
 #include "display.h"
 #include "rtc.h"
+#include "sun.h"
 
 // Module connection pins (Digital Pins)
 #define CLK 2
@@ -13,6 +14,7 @@
 Display g_display(CLK, DIO);
 Rtc g_rtc;
 TimedCapacitiveSensor g_tcs(CAPACITY_1, CAPACITY_2);
+Sun g_sun(LED);
 
 void display(const RtcDateTime &dt)
 {
@@ -22,7 +24,7 @@ void setup()
 {
   Serial.begin(57600);
   Serial.println("Running setup...");
-  pinMode(LED, OUTPUT);
+  g_sun.setup();
   g_display.setup();
   g_rtc.setup();
   g_tcs.setup();
@@ -43,8 +45,15 @@ public:
     long now_ms = millis();
 
     g_tcs.loop(now_ms);
-    int led_power = g_tcs.activation_duration(now_ms) * 255 / 5000;
-    analogWrite(LED, led_power);
+    if( g_tcs.increasing() )
+    {
+      g_sun.switch_on(g_tcs.percent());
+    }
+    else if( g_tcs.decreasing() )
+    {
+      g_sun.switch_off(now_ms);
+    }
+    g_sun.loop(now_ms);
     //Serial.printf("%d %d => %i\n", g_tcs.total(), g_tcs.activation_duration(now_ms), led_power);
 
     // Update time only once per seconds

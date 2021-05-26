@@ -6,32 +6,20 @@ class TimedCapacitiveSensor
 private:
     CapacitiveSensor _cs;
     long _activation_time_ms;
-    long _last_total;
-    long _previous_total;
+    long _previous_value;
     long _threshold;
+    long _increase_time;
+    bool _increasing;
+    long _percent;
+
+    void _update_percent(long value, long now_ms);
 
 public:
     TimedCapacitiveSensor(uint8_t sendPin, uint8_t receivePin);
     void setup();
     void loop(long now_ms);
-    inline bool is_active() const
-    {
-        return _last_total > _threshold;
-    }
-    inline bool was_active() const
-    {
-        return _previous_total > _threshold;
-    }
-    inline long activation_duration(long now_ms) const
-    {
-        if (is_active())
-        {
-            return now_ms - _activation_time_ms;
-        }
-        return 0;
-    }
-    inline long total() const
-    {
-        return _last_total;
-    }
+
+    inline bool increasing() const { return _increasing && _activation_time_ms > 0; }
+    inline bool decreasing() const { return !_increasing && _activation_time_ms > 0; }
+    inline int percent() const { return _percent; }
 };
