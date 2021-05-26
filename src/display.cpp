@@ -14,6 +14,7 @@ void Display::setup()
 
 void Display::display_time(const RtcDateTime &dt)
 {
+    _last_time = dt;
     int hour = dt.Hour();
     int minute = dt.Minute();
     uint8_t data[] = {0xff, 0xff, 0xff, 0xff};
