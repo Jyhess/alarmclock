@@ -7,7 +7,8 @@ TimedCapacitiveSensor::TimedCapacitiveSensor(uint8_t sendPin, uint8_t receivePin
 
 void TimedCapacitiveSensor::setup()
 {
-    _cs.set_CS_AutocaL_Millis(10000);
+    _cs.set_CS_AutocaL_Millis(1000);
+    _cs.set_CS_Timeout_Millis(100);
 }
 
 void TimedCapacitiveSensor::_update_percent(long value, long now_ms)
@@ -19,18 +20,18 @@ void TimedCapacitiveSensor::_update_percent(long value, long now_ms)
             _percent = 100;
         else
             _percent = elapsed_ms * 100 / _increase_time;
-        Serial.printf("%i increasing => %i\n", value, _percent);
+        //Serial.printf("%i increasing => %i\n", value, _percent);
     }
     else
     {
         _percent = 0; //100 - (now_ms - _activation_time_ms) * 100 / _increase_time;
-        Serial.printf("%i decreasing => %i\n", value, _percent);
+        //Serial.printf("%i decreasing => %i\n", value, _percent);
     }
 }
 
 void TimedCapacitiveSensor::loop(long now_ms)
 {
-    long value = _cs.capacitiveSensor(30);
+    long value = _cs.capacitiveSensor(100);
 
     if (_previous_value > 0)
     {
@@ -41,14 +42,14 @@ void TimedCapacitiveSensor::loop(long now_ms)
         else
         {
             _activation_time_ms = 0;
-            Serial.printf("%i stop touching => %i\n", value, _percent);
+            //Serial.printf("%i stop touching => %i\n", value, _percent);
         }
     }
     else if (value > _threshold)
     {
         _increasing = !_increasing;
         _activation_time_ms = now_ms;
-        Serial.printf("%i start touching => %i\n", value, _increasing);
+        //Serial.printf("%i start touching => %i\n", value, _increasing);
         _update_percent(value, now_ms);
     }
     else

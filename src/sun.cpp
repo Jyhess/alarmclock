@@ -36,7 +36,7 @@ void Sun::loop(long now_ms)
                 _current = _target;
             }
         }
-        Serial.printf("Sun switching %d => %d => %d\n", _current, current, _target);
+        //Serial.printf("Sun switching %d => %d => %d\n", _current, current, _target);
         analogWrite(_pin, current);
     }
 }
@@ -45,7 +45,7 @@ void Sun::switch_on(int percent)
 {
     if( percent == _current )
         return;
-    Serial.printf("Sun switch on %d\n", percent);
+    //Serial.printf("Sun switch on %d\n", percent);
     _target = percent * 255 / 100;
     _current = _target;
     analogWrite(_pin, _current);
@@ -55,7 +55,7 @@ void Sun::switch_off(long now_ms)
 {
     if(_target == 0 )
         return;
-    Serial.printf("Sun switch off\n");
+    //Serial.printf("Sun switch off\n");
     _target = 0;
     _start_time = now_ms;
 }

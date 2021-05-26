@@ -45,16 +45,15 @@ public:
     long now_ms = millis();
 
     g_tcs.loop(now_ms);
-    if( g_tcs.increasing() )
+    if (g_tcs.increasing())
     {
       g_sun.switch_on(g_tcs.percent());
     }
-    else if( g_tcs.decreasing() )
+    else if (g_tcs.decreasing())
     {
       g_sun.switch_off(now_ms);
     }
     g_sun.loop(now_ms);
-    //Serial.printf("%d %d => %i\n", g_tcs.total(), g_tcs.activation_duration(now_ms), led_power);
 
     // Update time only once per seconds
     if (now_ms - _last_run_ms > 1000)
@@ -64,8 +63,8 @@ public:
       {
         g_display.display_time(now);
       }
+      _last_run_ms = now_ms;
     }
-    _last_run_ms = now_ms;
   }
 };
 
@@ -74,5 +73,4 @@ Runner g_runner;
 void loop()
 {
   g_runner.run();
-  delay(100);
 }
