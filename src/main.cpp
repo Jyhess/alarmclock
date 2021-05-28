@@ -62,7 +62,7 @@ public:
     if (now_ms - _last_run_ms > 1000 || now_ms - _last_run_ms < 0)
     {
       RtcDateTime now = g_rtc.GetDateTime();
-      g_oled.display_time(now);
+      g_oled.set_current_time(Time(now.Hour(), now.Minute()));
       if (now.Minute() != g_display.last_time().Minute())
       {
         g_display.display_time(now);
