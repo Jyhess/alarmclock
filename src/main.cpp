@@ -3,6 +3,7 @@
 #include "display.h"
 #include "rtc.h"
 #include "sun.h"
+#include "oled.h"
 
 // Module connection pins (Digital Pins)
 #define CLK 2
@@ -15,6 +16,7 @@ Display g_display(CLK, DIO);
 Rtc g_rtc;
 TimedCapacitiveSensor g_tcs(CAPACITY_1, CAPACITY_2);
 Sun g_sun(LED);
+Oled g_oled;
 
 void display(const RtcDateTime &dt)
 {
@@ -28,6 +30,7 @@ void setup()
   g_display.setup();
   g_rtc.setup();
   g_tcs.setup();
+  g_oled.setup();
   Serial.println("Setup done");
 }
 
@@ -56,15 +59,17 @@ public:
     g_sun.loop(now_ms);
 
     // Update time only once per seconds
-    if (now_ms - _last_run_ms > 1000)
+    if (now_ms - _last_run_ms > 1000 || now_ms - _last_run_ms < 0)
     {
       RtcDateTime now = g_rtc.GetDateTime();
+      g_oled.display_time(now);
       if (now.Minute() != g_display.last_time().Minute())
       {
         g_display.display_time(now);
       }
       _last_run_ms = now_ms;
     }
+    g_oled.loop();
   }
 };
 
