@@ -1,6 +1,6 @@
 #include "oled.h"
 
-Oled::Oled() : _u8g(U8G2_R0), _brightness(0), _updated(true), _alarm_1(12, 34), _alarm_2(1, 2)
+Oled::Oled() : _u8g(U8G2_R0)
 {
 }
 
@@ -9,25 +9,24 @@ void Oled::setup()
     _u8g.begin();
 }
 
-void Oled::loop(void)
+void Oled::loop(const Data &data)
 {
-    if (_updated)
+    if (data.is_updated())
     {
-        _draw();
-        _updated = false;
+        _draw(data);
     }
 }
 
-void Oled::_draw()
+void Oled::_draw(const Data & data)
 {
-    CharRaii time = CharRaii(_make_time_str(_time));
-    CharRaii alarm_1 = CharRaii(_make_time_str(_alarm_1));
-    CharRaii alarm_2 = CharRaii(_make_time_str(_alarm_2));
+    CharRaii time = CharRaii(_make_time_str(data.get_current_time()));
+    CharRaii alarm_1 = CharRaii(_make_time_str(data.get_alarm_1()));
+    CharRaii alarm_2 = CharRaii(_make_time_str(data.get_alarm_2()));
 
     _u8g.firstPage();
     do
     {
-        _u8g.setContrast(_brightness);
+        _u8g.setContrast(data.get_display_brightness());
         _u8g.setFont(u8g2_font_fur35_tn);
         _u8g.drawStr(1, 36, time.data());
         _u8g.setColorIndex(1);
