@@ -2,7 +2,7 @@
 
 #include "time.h"
 
-class Data
+class Outputs
 {
 private:
     bool _updated;
@@ -13,7 +13,7 @@ private:
     Time _alarm_2;
 
 public:
-    inline Data() : _updated(false), _display_brightness(0)
+    inline Outputs() : _updated(false), _display_brightness(0)
     {
     }
 

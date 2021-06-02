@@ -9,24 +9,24 @@ void Oled::setup()
     _u8g.begin();
 }
 
-void Oled::loop(const Data &data)
+void Oled::loop(const Outputs &outputs)
 {
-    if (data.is_updated())
+    if (outputs.is_updated())
     {
-        _draw(data);
+        _draw(outputs);
     }
 }
 
-void Oled::_draw(const Data & data)
+void Oled::_draw(const Outputs &outputs)
 {
-    CharRaii time = CharRaii(_make_time_str(data.get_current_time()));
-    CharRaii alarm_1 = CharRaii(_make_time_str(data.get_alarm_1()));
-    CharRaii alarm_2 = CharRaii(_make_time_str(data.get_alarm_2()));
+    CharRaii time = CharRaii(_make_time_str(outputs.get_current_time()));
+    CharRaii alarm_1 = CharRaii(_make_time_str(outputs.get_alarm_1()));
+    CharRaii alarm_2 = CharRaii(_make_time_str(outputs.get_alarm_2()));
 
     _u8g.firstPage();
     do
     {
-        _u8g.setContrast(data.get_display_brightness());
+        _u8g.setContrast(outputs.get_display_brightness());
         _u8g.setFont(u8g2_font_fur35_tn);
         _u8g.drawStr(1, 36, time.data());
         _u8g.setColorIndex(1);

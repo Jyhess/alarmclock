@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include "rtc.h"
 #include "oled.h"
-#include "data.h"
+#include "outputs.h"
 
 // Module connection pins (Digital Pins)
 #define LED 5
@@ -10,7 +10,7 @@
 
 Rtc g_rtc;
 Oled g_oled;
-Data g_data;
+Outputs g_outputs;
 long last_run_ms = 0;
 
 void setup()
@@ -30,9 +30,9 @@ void loop()
   if (now_ms - last_run_ms > 1000 || now_ms - last_run_ms < 0)
   {
     RtcDateTime now = g_rtc.GetDateTime();
-    g_data.set_current_time(Time(now.Hour(), now.Minute()));
+    g_outputs.set_current_time(Time(now.Hour(), now.Minute()));
     last_run_ms = now_ms;
   }
-  g_oled.loop(g_data);
-  g_data.clear_updated();
+  g_oled.loop(g_outputs);
+  g_outputs.clear_updated();
 }
