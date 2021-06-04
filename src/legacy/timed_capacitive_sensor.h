@@ -1,4 +1,6 @@
 #pragma once
+/*
+// paulstoffregen/CapacitiveSensor@^0.5.1
 #include <CapacitiveSensor.h>
 
 class TimedCapacitiveSensor
@@ -23,3 +25,4 @@ public:
     inline bool decreasing() const { return !_increasing && _activation_time_ms > 0; }
     inline int percent() const { return _percent; }
 };
+*/

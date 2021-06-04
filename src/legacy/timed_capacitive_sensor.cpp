@@ -1,5 +1,5 @@
 #include "timed_capacitive_sensor.h"
-
+/*
 TimedCapacitiveSensor::TimedCapacitiveSensor(uint8_t sendPin, uint8_t receivePin)
     : _cs(sendPin, receivePin), _activation_time_ms(0), _previous_value(0), _threshold(50), _increase_time(3000), _increasing(false), _percent(0)
 {
@@ -60,3 +60,4 @@ void TimedCapacitiveSensor::loop(long now_ms)
 
     _previous_value = value;
 }
+*/
