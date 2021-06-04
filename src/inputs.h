@@ -13,7 +13,10 @@ public:
     bool yellow_has_been_pressed() const;
     bool green_has_been_pressed() const;
 
+    inline bool now_ms() const { return _now_ms; }
+
 private:
+    long _now_ms;
     Button _red;
     Button _yellow;
     Button _green;

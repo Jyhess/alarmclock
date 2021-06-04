@@ -27,6 +27,9 @@ void Oled::loop(const Outputs &outputs)
         case Step::ALARM_SET_MINUTE:
             _draw_alarm_set_minute(outputs);
             break;
+        case Step::NO_DISPLAY:
+            _u8g.noDisplay();
+            break;
         }
     }
 }
@@ -40,6 +43,7 @@ void Oled::_draw_normal(const Outputs &outputs)
     {
         alarm = _make_time_str(outputs.get_alarm());
     }
+    _u8g.display();
     _u8g.setContrast(outputs.get_display_brightness());
     int alarm_x = _u8g.getDisplayWidth() / 2;
     int alarm_y = 56;

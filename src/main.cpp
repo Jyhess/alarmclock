@@ -25,7 +25,7 @@ void setup()
   Serial.println("Running setup...");
   g_rtc.setup();
   g_oled.setup();
-  g_state.setup();
+  g_state.setup(millis());
   //g_inputs.setup();
   Serial.println("Setup done");
 }

@@ -1,9 +1,16 @@
 #include "state.h"
+#include "utils/ms_diff.h"
 
-State::State() : _step(NORMAL) {}
-
-void State::setup()
+namespace
 {
+    static unsigned long off_threshold = 30;
+}
+
+State::State() : _step(NORMAL), _last_change(0) {}
+
+void State::setup(long now_ms)
+{
+    _last_change = now_ms;
 }
 
 void State::loop(const Inputs &inputs, Outputs &outputs)
@@ -22,6 +29,9 @@ void State::loop(const Inputs &inputs, Outputs &outputs)
     case Step::ALARM_SET_MINUTE:
         _process_alarm_set_minute(inputs, outputs);
         break;
+    case Step::NO_DISPLAY:
+        _process_off(inputs, outputs);
+        break;
     }
 }
 
@@ -30,6 +40,14 @@ void State::_process_normal(const Inputs &inputs, Outputs &outputs)
     if (inputs.red_has_been_pressed())
     {
         _change_step(outputs, Step::ALARM_SELECT);
+    }
+    else if (inputs.yellow_has_been_pressed() || inputs.green_has_been_pressed())
+    {
+        _last_change = inputs.now_ms();
+    }
+    else if (ms_diff(_last_change, inputs.now_ms()) > off_threshold)
+    {
+        _change_step(outputs, Step::NO_DISPLAY);
     }
 }
 
@@ -95,6 +113,7 @@ void State::_process_alarm_set_minute(const Inputs &inputs, Outputs &outputs)
     {
         outputs.set_alarm(outputs.get_custom_alarm());
         _change_step(outputs, Step::NORMAL);
+        _last_change = inputs.now_ms();
     }
     else if (inputs.yellow_has_been_pressed())
     {
@@ -108,7 +127,16 @@ void State::_process_alarm_set_minute(const Inputs &inputs, Outputs &outputs)
     }
 }
 
-void State::_change_step(Outputs & outputs, Step step)
+void State::_process_off(const Inputs &inputs, Outputs &outputs)
+{
+    if (inputs.red_has_been_pressed() || inputs.yellow_has_been_pressed() || inputs.green_has_been_pressed())
+    {
+        _last_change = inputs.now_ms();
+        _change_step(outputs, Step::NORMAL);
+    }
+}
+
+void State::_change_step(Outputs &outputs, Step step)
 {
     _step = step;
     outputs.set_step(step);

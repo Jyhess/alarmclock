@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include "button.h"
+#include "utils/ms_diff.h"
 
 Button::Button(int pin) : _pin(pin), _debounce_time(0), _count(0), _count_mode(CountMode::Falling), _last_debounce_time(0)
 {
@@ -74,7 +75,7 @@ void Button::loop(long now_ms)
         _last_flickerable_state = _current_state;
     }
 
-    if ((now_ms - _last_debounce_time) >= _debounce_time)
+    if (ms_diff(now_ms, _last_debounce_time) >= _debounce_time)
     {
         // whatever the reading is at, it's been there for longer than the debounce
         // delay, so take it as the actual current state:

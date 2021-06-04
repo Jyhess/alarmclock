@@ -1,11 +1,12 @@
 #include "inputs.h"
 
-Inputs::Inputs(int red_pin, int yellow_pin, int green_pin) : _red(red_pin), _yellow(yellow_pin), _green(green_pin)
+Inputs::Inputs(int red_pin, int yellow_pin, int green_pin) : _now_ms(0), _red(red_pin), _yellow(yellow_pin), _green(green_pin)
 {
 }
 
 void Inputs::loop(int now_ms)
 {
+    _now_ms = now_ms;
     _red.loop(now_ms);
     _yellow.loop(now_ms);
     _green.loop(now_ms);
