@@ -8,7 +8,7 @@ class State
 {
 public:
     State();
-    void setup(long now_ms);
+    void setup();
     void loop(const Inputs &inputs, Outputs &outputs);
 
 private:

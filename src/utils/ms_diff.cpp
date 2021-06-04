@@ -1,5 +1,6 @@
 #include "utils/ms_diff.h"
 
+// ms_diff(start_time, now_ms)
 unsigned long ms_diff(long ms_1, long ms_2)
 {
     if (ms_1 < 0 && ms_2 >= 0)

@@ -4,6 +4,7 @@
 #include "outputs.h"
 #include "inputs.h"
 #include "state.h"
+#include "buzzer.h"
 
 // Module connection pins (Digital Pins)
 #define PIN_LIGHT_SENSOR A0
@@ -17,6 +18,7 @@ Oled g_oled;
 Outputs g_outputs;
 Inputs g_inputs(PIN_BUTTON_RED, PIN_BUTTON_YELLOW, PIN_BUTTON_GREEN);
 State g_state;
+Buzzer g_buzzer(PIN_BUZZER);
 long last_run_ms = 0;
 
 void setup()
@@ -25,7 +27,8 @@ void setup()
   Serial.println("Running setup...");
   g_rtc.setup();
   g_oled.setup();
-  g_state.setup(millis());
+  g_state.setup();
+  g_buzzer.setup();
   //g_inputs.setup();
   Serial.println("Setup done");
 }
@@ -45,4 +48,17 @@ void loop()
   }
   g_oled.loop(g_outputs);
   g_outputs.clear_updated();
+
+  if (g_outputs.get_step() == Step::NORMAL)
+  {
+    if (g_inputs.green_has_been_pressed())
+    {
+      g_buzzer.play();
+    }
+    else if (g_inputs.yellow_has_been_pressed())
+    {
+      g_buzzer.stop();
+    }
+    g_buzzer.loop(now_ms);
+  }
 }

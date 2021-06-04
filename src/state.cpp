@@ -8,13 +8,14 @@ namespace
 
 State::State() : _step(NORMAL), _last_change(0) {}
 
-void State::setup(long now_ms)
+void State::setup()
 {
-    _last_change = now_ms;
 }
 
 void State::loop(const Inputs &inputs, Outputs &outputs)
 {
+    if (_last_change == 0)
+        _last_change = inputs.now_ms();
     switch (_step)
     {
     case Step::NORMAL:

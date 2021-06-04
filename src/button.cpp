@@ -75,7 +75,7 @@ void Button::loop(long now_ms)
         _last_flickerable_state = _current_state;
     }
 
-    if (ms_diff(now_ms, _last_debounce_time) >= _debounce_time)
+    if (ms_diff(_last_debounce_time, now_ms) >= _debounce_time)
     {
         // whatever the reading is at, it's been there for longer than the debounce
         // delay, so take it as the actual current state:
