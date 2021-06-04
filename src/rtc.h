@@ -3,7 +3,6 @@
 #include <Wire.h> // must be included here so that Arduino library object file references work
 #include <RtcDS3231.h>
 
-
 class Rtc
 {
 private:
