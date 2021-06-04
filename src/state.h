@@ -19,4 +19,6 @@ private:
     void _process_alarm_on_off(const Inputs &inputs, Outputs &outputs);
     void _process_alarm_set_hour(const Inputs &inputs, Outputs &outputs);
     void _process_alarm_set_minute(const Inputs &inputs, Outputs &outputs);
+
+    void _change_step(Outputs &outputs, Step step);
 };

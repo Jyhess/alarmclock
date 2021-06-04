@@ -18,6 +18,7 @@ private:
     Updatable<Optional<Time>> _alarm;
     Updatable<Step> _step;
 
+    Updatable<Time> _custom_alarm;
     typedef Array<Time, PREDEFINED_ALARMS> Alarms;
     Alarms _alarms;
     // Off = -2
@@ -38,7 +39,7 @@ public:
 
     inline bool is_updated() const
     {
-        return _display_brightness.is_updated() || _time.is_updated() || _alarm.is_updated() || _step.is_updated() || _alarm_index.is_updated();
+        return _display_brightness.is_updated() || _time.is_updated() || _alarm.is_updated() || _step.is_updated() || _alarm_index.is_updated() || _custom_alarm.is_updated();
     }
     void clear_updated()
     {
@@ -47,6 +48,7 @@ public:
         _alarm.clear_updated();
         _step.clear_updated();
         _alarm_index.clear_updated();
+        _custom_alarm.clear_updated();
     }
 
     inline const Step &get_step() const { return *_step; }
@@ -62,6 +64,9 @@ public:
     inline const Time &get_alarm() const { return _alarm.value().value(); }
     inline void set_alarm(const Time &value) { _alarm = value; }
     inline void switch_off_alarm() { _alarm = Optional<Time>(); }
+
+    inline const Time &get_custom_alarm() const { return *_custom_alarm; }
+    inline void set_custom_alarm(const Time &value) { _custom_alarm = value; }
 
     const Alarms &get_predefine_alarms() const { return _alarms; }
     inline int get_alarm_index() const { return *_alarm_index; }

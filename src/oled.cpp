@@ -1,15 +1,5 @@
 #include "oled.h"
 
-namespace
-{
-    static int LINE_1 = 21;
-    static int LINE_2 = 42;
-    static int LINE_3 = 63;
-    static int COL_1 = 2;
-    static int COL_2 = 42;
-    static int COL_3 = 83;
-}
-
 Oled::Oled() : _u8g(U8G2_R0)
 {
 }
@@ -50,92 +40,133 @@ void Oled::_draw_normal(const Outputs &outputs)
     {
         alarm = _make_time_str(outputs.get_alarm());
     }
+    _u8g.setContrast(outputs.get_display_brightness());
+    int alarm_x = _u8g.getDisplayWidth() / 2;
+    int alarm_y = 56;
+    _u8g.setFont(u8g2_font_fur35_tn);
+    int x = (_u8g.getDisplayWidth() - _u8g.getStrWidth(time.c_str())) / 2;
 
     _u8g.firstPage();
     do
     {
-        _u8g.setContrast(outputs.get_display_brightness());
         _u8g.setFont(u8g2_font_fur35_tn);
-        _u8g.drawStr(COL_1, 38, time.c_str());
-        _u8g.setFont(u8g2_font_fur14_tn);
-        _u8g.drawStr(COL_3 - 5, LINE_3, alarm.c_str());
+        _u8g.drawStr(x, 38, time.c_str());
+        _draw_item(alarm_x, alarm_y, alarm, true);
     } while (_u8g.nextPage());
 }
 
 void Oled::_draw_alarm_select(const Outputs &outputs)
 {
-    String alarm = _make_time_str(outputs.get_alarm());
+    const String off = "off";
+    const String alarm = _make_time_str(outputs.get_alarm());
     Array<String, PREDEFINED_ALARMS> alarms;
     for (int i = 0; i < PREDEFINED_ALARMS; ++i)
     {
         alarms[i] = _make_time_str(outputs.get_predefine_alarms()[i]);
     }
+    int width = _u8g.getDisplayWidth();
+    int x_1 = 1 * width / 6;
+    int x_2 = 3 * width / 6;
+    int x_3 = 5 * width / 6;
+    int height = _u8g.getDisplayHeight();
+    int y_1 = 1 * height / 6;
+    int y_2 = 3 * height / 6;
+    int y_3 = 5 * height / 6;
 
-    const uint8_t *small = u8g2_font_fur11_tf;
-    const uint8_t *selected = u8g2_font_fur14_tf;
+    const int id = outputs.get_alarm_index();
     _u8g.firstPage();
     do
     {
         _u8g.setContrast(outputs.get_display_brightness());
-        _u8g.setFont(outputs.get_alarm_index() == NO_ALARM ? selected : small);
-        _u8g.drawStr(COL_1, LINE_1, " off");
-        _u8g.setFont(outputs.get_alarm_index() == CUSTOM_ALARM ? selected : small);
-        _u8g.drawStr(COL_3, LINE_1, alarm.c_str());
-        _u8g.setFont(outputs.get_alarm_index() == 0 ? selected : small);
-        _u8g.drawStr(COL_1, LINE_2, alarms[0].c_str());
-        _u8g.setFont(outputs.get_alarm_index() == 1 ? selected : small);
-        _u8g.drawStr(COL_2, LINE_2, alarms[1].c_str());
-        _u8g.setFont(outputs.get_alarm_index() == 2 ? selected : small);
-        _u8g.drawStr(COL_3, LINE_2, alarms[2].c_str());
-        _u8g.setFont(outputs.get_alarm_index() == 3 ? selected : small);
-        _u8g.drawStr(COL_1, LINE_3, alarms[0].c_str());
-        _u8g.setFont(outputs.get_alarm_index() == 4 ? selected : small);
-        _u8g.drawStr(COL_2, LINE_3, alarms[1].c_str());
-        _u8g.setFont(outputs.get_alarm_index() == 5 ? selected : small);
-        _u8g.drawStr(COL_3, LINE_3, alarms[2].c_str());
+        _u8g.setFont(u8g2_font_fur11_tf);
+        _draw_item(x_1, y_1, off, id == NO_ALARM);
+        _draw_item(x_3, y_1, alarm, id == CUSTOM_ALARM);
+        _draw_item(x_1, y_2, alarms[0], id == 0);
+        _draw_item(x_2, y_2, alarms[1], id == 1);
+        _draw_item(x_3, y_2, alarms[2], id == 2);
+        _draw_item(x_1, y_3, alarms[3], id == 3);
+        _draw_item(x_2, y_3, alarms[4], id == 4);
+        _draw_item(x_3, y_3, alarms[5], id == 5);
     } while (_u8g.nextPage());
+}
+
+void Oled::_draw_item(int x, int y, const String &str, bool selected)
+{
+    int height = 11;
+    if (selected)
+    {
+        _u8g.setFont(u8g2_font_fur14_tf);
+        height = 14;
+    }
+    int width = _u8g.getStrWidth(str.c_str());
+    _u8g.drawStr(x - width / 2, y + height / 2, str.c_str());
+    if (selected)
+    {
+        _u8g.setFont(u8g2_font_fur11_tf);
+    }
 }
 
 void Oled::_draw_alarm_set_hour(const Outputs &outputs)
 {
-    String time = _make_time_str(outputs.get_current_time());
-    String alarm = _make_time_str(outputs.get_alarm());
+    const String time = _make_time_str(outputs.get_current_time());
+
+    char hours[] = "__";
+    sprintf(hours, "%2d", outputs.get_custom_alarm().get_hour());
+    char minutes[] = ":__";
+    sprintf(minutes, ":%02d", outputs.get_custom_alarm().get_minute());
+
+    _u8g.setContrast(outputs.get_display_brightness());
+    int time_x = _u8g.getDisplayWidth() / 2;
+    int time_y = 56;
+    _u8g.setFont(u8g2_font_fur30_tn);
+    int minutes_x = _u8g.getDisplayWidth() / 2 - 4;
+    _u8g.setFont(u8g2_font_fur35_tn);
+    int hours_width = _u8g.getStrWidth(hours);
+    int hours_x = minutes_x - hours_width;
 
     _u8g.firstPage();
     do
     {
-        _u8g.setContrast(outputs.get_display_brightness());
         _u8g.setFont(u8g2_font_fur35_tn);
-        _u8g.drawStr(COL_1, 38, alarm.c_str());
-        _u8g.setFont(u8g2_font_fur14_tn);
-        _u8g.drawStr(COL_1, LINE_3, time.c_str());
-        _u8g.drawFrame(0, 0, 56, 39);
+        _u8g.drawStr(hours_x, 38, hours);
+        _u8g.setFont(u8g2_font_fur30_tn);
+        _u8g.drawStr(minutes_x, 38, minutes);
+        _draw_item(time_x, time_y, time, true);
     } while (_u8g.nextPage());
 }
 
 void Oled::_draw_alarm_set_minute(const Outputs &outputs)
 {
-    String time = _make_time_str(outputs.get_current_time());
-    String alarm = _make_time_str(outputs.get_alarm());
+    const String time = _make_time_str(outputs.get_current_time());
+
+    char hours[] = "__:";
+    sprintf(hours, "%d:", outputs.get_custom_alarm().get_hour());
+    char minutes[] = "__";
+    sprintf(minutes, "%02d", outputs.get_custom_alarm().get_minute());
+
+    _u8g.setContrast(outputs.get_display_brightness());
+    int time_x = _u8g.getDisplayWidth() / 2;
+    int time_y = 56;
+    _u8g.setFont(u8g2_font_fur35_tn);
+    int minutes_x = _u8g.getDisplayWidth() / 2 + 4;
+    _u8g.setFont(u8g2_font_fur30_tn);
+    int hours_x = minutes_x - _u8g.getStrWidth(hours);
 
     _u8g.firstPage();
     do
     {
-        _u8g.setContrast(outputs.get_display_brightness());
+        _u8g.setFont(u8g2_font_fur30_tn);
+        _u8g.drawStr(hours_x, 38, hours);
         _u8g.setFont(u8g2_font_fur35_tn);
-        _u8g.drawStr(COL_1, 38, alarm.c_str());
-        _u8g.setFont(u8g2_font_fur14_tn);
-        _u8g.drawStr(COL_1, LINE_3, time.c_str());
-        _u8g.drawFrame(65, 0, 56, 39);
+        _u8g.drawStr(minutes_x, 38, minutes);
+        _draw_item(time_x, time_y, time, true);
     } while (_u8g.nextPage());
 }
 
 String Oled::_make_time_str(const Time &time) const
 {
-    String data("  :  ");
+    String data("__:__");
     char *begin = data.begin();
-    if (time.get_hour() < 10)
-        begin++;
-    sprintf(begin, "%2d:%02d", time.get_hour(), time.get_minute());
+    sprintf(begin, "%d:%02d", time.get_hour(), time.get_minute());
     return data;
 }

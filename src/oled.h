@@ -19,5 +19,6 @@ private:
     void _draw_alarm_select(const Outputs &outputs);
     void _draw_alarm_set_hour(const Outputs &outputs);
     void _draw_alarm_set_minute(const Outputs &outputs);
+    void _draw_item(int x, int y, const String &str, bool selected);
     String _make_time_str(const Time &time) const;
 };
