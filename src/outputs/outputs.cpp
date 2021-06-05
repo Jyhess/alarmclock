@@ -14,6 +14,6 @@ void Outputs::setup()
 void Outputs::loop(const State &state)
 {
     _oled.loop(state);
-    _buzzer.loop(state.now_ms());
-    _sun.loop(state.now_ms());
+    _buzzer.loop(state);
+    _sun.loop(state);
 }

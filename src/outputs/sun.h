@@ -1,19 +1,19 @@
 #pragma once
-#include <stdint.h>
+#include "state.h"
 
 class Sun
 {
 private:
-    uint8_t _pin;
+    int _pin;
     int _current;
     int _target;
     long _switch_duration;
     long _start_time;
 
 public:
-    Sun(uint8_t pin);
+    Sun(int pin);
     void setup();
-    void loop(long now_ms);
+    void loop(const State &state);
 
     void switch_on(int percent);
     void switch_off(long now_ms);

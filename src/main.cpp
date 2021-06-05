@@ -28,22 +28,8 @@ void setup()
 
 void loop()
 {
-  long now_ms = millis();
-  g_inputs.loop(now_ms);
+  g_inputs.loop();
   g_runner.loop(g_inputs, g_state);
   g_outputs.loop(g_state);
   g_state.clear_updated();
-
-  //if (g_state.get_step() == Step::NORMAL)
-  //{
-  //  if (g_inputs.green_has_been_pressed())
-  //  {
-  //    g_buzzer.play();
-  //  }
-  //  else if (g_inputs.yellow_has_been_pressed())
-  //  {
-  //    g_buzzer.stop();
-  //  }
-  //  g_buzzer.loop(now_ms);
-  //}
 }

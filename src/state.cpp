@@ -1,6 +1,6 @@
 #include "state.h"
 
-State::State() : _display_brightness(0), _alarm_index(NO_ALARM)
+State::State() : _now_ms(0), _display_brightness(0), _alarm_index(NO_ALARM), _alarm_playing(false)
 {
     _alarms[0] = Time(6, 30);
     _alarms[1] = Time(7, 0);
@@ -12,7 +12,7 @@ State::State() : _display_brightness(0), _alarm_index(NO_ALARM)
 
 bool State::is_updated() const
 {
-    return _display_brightness.is_updated() || _time.is_updated() || _alarm.is_updated() || _step.is_updated() || _alarm_index.is_updated() || _custom_alarm.is_updated();
+    return _display_brightness.is_updated() || _time.is_updated() || _alarm.is_updated() || _step.is_updated() || _alarm_index.is_updated() || _custom_alarm.is_updated() || _alarm_playing.is_updated();
 }
 
 void State::clear_updated()
@@ -23,4 +23,5 @@ void State::clear_updated()
     _step.clear_updated();
     _alarm_index.clear_updated();
     _custom_alarm.clear_updated();
+    _alarm_playing.clear_updated();
 }

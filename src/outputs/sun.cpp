@@ -1,7 +1,8 @@
 #include <Arduino.h>
 #include "outputs/sun.h"
+#include "utils/ms_diff.h"
 
-Sun::Sun(uint8_t pin) : _pin(pin), _current(0), _target(0), _switch_duration(3000), _start_time(0)
+Sun::Sun(int pin) : _pin(pin), _current(0), _target(0), _switch_duration(3000), _start_time(0)
 {
 }
 
@@ -11,11 +12,11 @@ void Sun::setup()
     analogWrite(_pin, 0);
 }
 
-void Sun::loop(long now_ms)
+void Sun::loop(const State &state)
 {
     if (_current != _target)
     {
-        long elapsed_ms = now_ms - _start_time;
+        long elapsed_ms = ms_diff(_start_time, state.now_ms());
         long change = 255 * elapsed_ms / _switch_duration;
         long current = 0;
         if (_current > _target)

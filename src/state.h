@@ -5,7 +5,6 @@
 #include "utils/updatable.h"
 #include "utils/optional.h"
 #include "utils/array.h"
-#include "outputs/sun.h"
 
 #define NO_ALARM -2
 #define CUSTOM_ALARM -1
@@ -28,6 +27,8 @@ private:
     // Custom = -1
     // Predefined = [0,PREDEFINED_ALARMS[
     Updatable<int> _alarm_index;
+
+    Updatable<bool> _alarm_playing;
 
 public:
     State();
@@ -58,4 +59,7 @@ public:
     const Alarms &get_predefine_alarms() const { return _alarms; }
     inline int get_alarm_index() const { return *_alarm_index; }
     inline void set_alarm_index(int value) { _alarm_index = value; }
+
+    inline bool is_alarm_playing() const { return *_alarm_playing; }
+    inline void set_alarm_playing(bool value) { _alarm_playing = value; }
 };

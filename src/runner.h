@@ -19,7 +19,8 @@ private:
     void _process_alarm_on_off(const Inputs &inputs, State &state);
     void _process_alarm_set_hour(const Inputs &inputs, State &state);
     void _process_alarm_set_minute(const Inputs &inputs, State &state);
+    void _process_alarm_playing(const Inputs &inputs, State &state);
     void _process_off(const Inputs &inputs, State &state);
 
-    void _change_step(State &state, Step step);
+    void _change_step(State &state, Step step, const char * reason = nullptr);
 };

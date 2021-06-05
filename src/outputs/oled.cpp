@@ -16,6 +16,7 @@ void Oled::loop(const State &state)
         switch (state.get_step())
         {
         case Step::NORMAL:
+        case Step::ALARM_PLAYING:
             _draw_normal(state);
             break;
         case Step::ALARM_SELECT:
@@ -42,6 +43,10 @@ void Oled::_draw_normal(const State &state)
     if (state.is_alarm_on())
     {
         alarm = _make_time_str(state.get_alarm());
+    }
+    if (state.is_alarm_playing())
+    {
+        alarm = String("> ") + alarm + String(" <");
     }
     _u8g.display();
     _u8g.setContrast(state.get_display_brightness());
@@ -166,6 +171,7 @@ void Oled::_draw_alarm_set_minute(const State &state)
         _draw_item(time_x, time_y, time, true);
     } while (_u8g.nextPage());
 }
+
 
 String Oled::_make_time_str(const Time &time) const
 {

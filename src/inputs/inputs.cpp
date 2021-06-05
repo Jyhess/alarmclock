@@ -10,17 +10,17 @@ void Inputs::setup()
     _rtc.setup();
 }
 
-void Inputs::loop(int now_ms)
+void Inputs::loop()
 {
-    _now_ms = now_ms;
-    _red.loop(now_ms);
-    _yellow.loop(now_ms);
-    _green.loop(now_ms);
-    if (ms_diff(_last_rtc_read, now_ms) > 1000)
+    _now_ms = millis();
+    _red.loop(_now_ms);
+    _yellow.loop(_now_ms);
+    _green.loop(_now_ms);
+    if (ms_diff(_last_rtc_read, _now_ms) > 1000)
     {
         RtcDateTime now = _rtc.GetDateTime();
         _time = Time(now.Hour(), now.Minute());
-        _last_rtc_read = now_ms;
+        _last_rtc_read = _now_ms;
     }
 }
 

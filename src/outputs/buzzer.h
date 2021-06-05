@@ -1,5 +1,7 @@
 #pragma once
 
+#include "state.h"
+
 class Buzzer
 {
 private:
@@ -11,7 +13,8 @@ private:
 public:
     Buzzer(int pin);
     void setup();
-    void loop(long now_ms);
-    void play();
-    void stop();
+    void loop(const State &state);
+
+private:
+    void _play(long now_ms);
 };

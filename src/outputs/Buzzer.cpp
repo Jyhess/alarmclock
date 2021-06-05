@@ -49,16 +49,35 @@ void Buzzer::setup()
 {
 }
 
-void Buzzer::loop(long now_ms)
+void Buzzer::loop(const State &state)
 {
-    if (!_is_playing)
-        return;
-    if (_start_note_ms == 0)
-        _start_note_ms = now_ms;
+    if (_is_playing && !state.is_alarm_playing())
+    {
+        _is_playing = false;
+        noTone(_pin);
+        Serial.print("Buzzer stopped\n");
+    }
+    else if(!_is_playing && state.is_alarm_playing())
+    {
+        _is_playing = true;
+        _note = 0;
+        _start_note_ms = state.now_ms();
+        Serial.printf("Buzzer started %d\n", _start_note_ms);
+        _play(state.now_ms());
+    }
+    if(_is_playing)
+    {
+        _play(state.now_ms());
+    }
+}
+
+void Buzzer::_play(long now_ms)
+{
     unsigned long note_duration = ms_per_note / durations[_note];
     unsigned long note_played_ms = ms_diff(_start_note_ms, now_ms);
     if (note_played_ms >= (note_duration * 1.3))
     {
+        Serial.printf("Buzzer playing note %d\n", _note);
         _note = (_note + 1) % nb_notes;
         if (melody[_note])
         {
@@ -66,17 +85,4 @@ void Buzzer::loop(long now_ms)
         }
         _start_note_ms = now_ms;
     }
-}
-
-void Buzzer::play()
-{
-    _is_playing = true;
-    _start_note_ms = 0;
-    _note = 0;
-}
-
-void Buzzer::stop()
-{
-    _is_playing = false;
-    noTone(_pin);
 }

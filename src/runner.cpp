@@ -3,7 +3,7 @@
 
 namespace
 {
-    static unsigned long off_threshold = 30;
+    static unsigned long off_threshold = 30000;
 }
 
 Runner::Runner() : _step(NORMAL), _last_change(0) {}
@@ -28,6 +28,9 @@ void Runner::loop(const Inputs &inputs, State &state)
     case Step::ALARM_SET_MINUTE:
         _process_alarm_set_minute(inputs, state);
         break;
+    case Step::ALARM_PLAYING:
+        _process_alarm_playing(inputs, state);
+        break;
     case Step::NO_DISPLAY:
         _process_off(inputs, state);
         break;
@@ -38,15 +41,22 @@ void Runner::_process_normal(const Inputs &inputs, State &state)
 {
     if (inputs.red_has_been_pressed())
     {
-        _change_step(state, Step::ALARM_SELECT);
+        _change_step(state, Step::ALARM_SELECT, "Red pressed");
     }
-    else if (inputs.yellow_has_been_pressed() || inputs.green_has_been_pressed())
+    else if (inputs.yellow_has_been_pressed())
     {
         _last_change = inputs.now_ms();
     }
+    else if (inputs.green_has_been_pressed())
+    {
+        state.set_alarm_playing(true);
+        _change_step(state, Step::ALARM_PLAYING, "Green pressed");
+    }
     else if (ms_diff(_last_change, inputs.now_ms()) > off_threshold)
     {
-        _change_step(state, Step::NO_DISPLAY);
+        unsigned long diff = ms_diff(_last_change, inputs.now_ms());
+        String reason = String("No action since ") + String(diff) + String(" ms");
+        _change_step(state, Step::NO_DISPLAY, reason.c_str());
     }
 }
 
@@ -126,6 +136,15 @@ void Runner::_process_alarm_set_minute(const Inputs &inputs, State &state)
     }
 }
 
+void Runner::_process_alarm_playing(const Inputs &inputs, State &state)
+{
+    if (inputs.red_has_been_pressed() || inputs.yellow_has_been_pressed())
+    {
+        _last_change = inputs.now_ms();
+        state.set_alarm_playing(false);
+        _change_step(state, Step::NORMAL);
+    }
+}
 void Runner::_process_off(const Inputs &inputs, State &state)
 {
     if (inputs.red_has_been_pressed() || inputs.yellow_has_been_pressed() || inputs.green_has_been_pressed())
@@ -135,8 +154,13 @@ void Runner::_process_off(const Inputs &inputs, State &state)
     }
 }
 
-void Runner::_change_step(State &state, Step step)
+void Runner::_change_step(State &state, Step step, const char *reason)
 {
+    Serial.printf("State changed %d", _step);
+    Serial.printf(" > %d", step);
+    if (reason)
+        Serial.print(reason);
+    Serial.print("\n");
     _step = step;
     state.set_step(step);
 }
