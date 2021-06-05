@@ -23,4 +23,5 @@ private:
     void _process_off(const Inputs &inputs, State &state);
 
     void _change_step(State &state, Step step, const char * reason = nullptr);
+    void _trigger_alarm_if_needed(State &state);
 };

@@ -29,6 +29,7 @@ private:
     Updatable<int> _alarm_index;
 
     Updatable<bool> _alarm_playing;
+    Optional<Time> _last_alarm;
 
 public:
     State();
@@ -61,5 +62,16 @@ public:
     inline void set_alarm_index(int value) { _alarm_index = value; }
 
     inline bool is_alarm_playing() const { return *_alarm_playing; }
-    inline void set_alarm_playing(bool value) { _alarm_playing = value; }
+    inline void set_alarm_playing(bool value)
+    {
+        _alarm_playing = value;
+        if (value)
+            _last_alarm = get_current_time();
+        // TODO: Where to reset this _last_alarm
+    }
+
+    inline bool alarm_already_started_this_minute() const
+    {
+        return _last_alarm.has_value() && _last_alarm.value() == get_current_time();
+    }
 };

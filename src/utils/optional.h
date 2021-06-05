@@ -31,6 +31,11 @@ public:
     inline void reset() { _has_value = false; }
     inline const T &value() const { return _value; }
     inline T &value() { return _value; }
+    inline void set_value(const T &value)
+    {
+        _value = value;
+        _has_value = true;
+    }
 
     bool operator==(const Optional<T> &other) const { return _has_value == other._has_value && _value == other._value; }
     bool operator!=(const Optional<T> &other) const { return !operator==(other); }

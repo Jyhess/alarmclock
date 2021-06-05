@@ -77,7 +77,6 @@ void Buzzer::_play(long now_ms)
     unsigned long note_played_ms = ms_diff(_start_note_ms, now_ms);
     if (note_played_ms >= (note_duration * 1.3))
     {
-        Serial.printf("Buzzer playing note %d\n", _note);
         _note = (_note + 1) % nb_notes;
         if (melody[_note])
         {
