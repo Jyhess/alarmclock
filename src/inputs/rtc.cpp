@@ -1,4 +1,4 @@
-#include "rtc.h"
+#include "inputs/rtc.h"
 
 #define countof(a) (sizeof(a) / sizeof(a[0]))
 

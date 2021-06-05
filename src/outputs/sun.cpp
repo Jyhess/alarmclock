@@ -1,5 +1,5 @@
-#include "sun.h"
 #include <Arduino.h>
+#include "outputs/sun.h"
 
 Sun::Sun(uint8_t pin) : _pin(pin), _current(0), _target(0), _switch_duration(3000), _start_time(0)
 {
@@ -43,7 +43,7 @@ void Sun::loop(long now_ms)
 
 void Sun::switch_on(int percent)
 {
-    if( percent == _current )
+    if (percent == _current)
         return;
     //Serial.printf("Sun switch on %d\n", percent);
     _target = percent * 255 / 100;
@@ -53,7 +53,7 @@ void Sun::switch_on(int percent)
 
 void Sun::switch_off(long now_ms)
 {
-    if(_target == 0 )
+    if (_target == 0)
         return;
     //Serial.printf("Sun switch off\n");
     _target = 0;

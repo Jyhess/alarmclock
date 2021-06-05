@@ -2,7 +2,7 @@
 
 #include "utils/pitches.h"
 #include "utils/ms_diff.h"
-#include "buzzer.h"
+#include "outputs/buzzer.h"
 
 namespace
 {

@@ -1,12 +1,15 @@
 #pragma once
 
-#include "button.h"
+#include "inputs/button.h"
+#include "inputs/rtc.h"
+#include "utils/time.h"
 
 class Inputs
 {
 public:
     Inputs(int red_pin, int yellow_pin, int green_pin);
 
+    void setup();
     void loop(int now_ms);
 
     bool red_has_been_pressed() const;
@@ -15,9 +18,16 @@ public:
 
     inline bool now_ms() const { return _now_ms; }
 
+    inline const Time &get_time() const { return _time; }
+
 private:
     long _now_ms;
+
     Button _red;
     Button _yellow;
     Button _green;
+
+    Rtc _rtc;
+    long _last_rtc_read;
+    Time _time;
 };

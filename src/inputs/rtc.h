@@ -6,7 +6,8 @@
 class Rtc
 {
 private:
-    RtcDS3231<TwoWire> _rtc;
+    typedef RtcDS3231<TwoWire> RtcDevice;
+    RtcDevice _rtc;
 
 public:
     Rtc();

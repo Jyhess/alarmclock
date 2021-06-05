@@ -1,5 +1,6 @@
 #include <Arduino.h>
-#include "button.h"
+
+#include "inputs/button.h"
 #include "utils/ms_diff.h"
 
 Button::Button(int pin) : _pin(pin), _debounce_time(0), _count(0), _count_mode(CountMode::Falling), _last_debounce_time(0)

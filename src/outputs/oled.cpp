@@ -1,4 +1,4 @@
-#include "oled.h"
+#include "outputs/oled.h"
 
 Oled::Oled() : _u8g(U8G2_R0)
 {
@@ -9,23 +9,23 @@ void Oled::setup()
     _u8g.begin();
 }
 
-void Oled::loop(const Outputs &outputs)
+void Oled::loop(const State &state)
 {
-    if (outputs.is_updated())
+    if (state.is_updated())
     {
-        switch (outputs.get_step())
+        switch (state.get_step())
         {
         case Step::NORMAL:
-            _draw_normal(outputs);
+            _draw_normal(state);
             break;
         case Step::ALARM_SELECT:
-            _draw_alarm_select(outputs);
+            _draw_alarm_select(state);
             break;
         case Step::ALARM_SET_HOUR:
-            _draw_alarm_set_hour(outputs);
+            _draw_alarm_set_hour(state);
             break;
         case Step::ALARM_SET_MINUTE:
-            _draw_alarm_set_minute(outputs);
+            _draw_alarm_set_minute(state);
             break;
         case Step::NO_DISPLAY:
             _u8g.noDisplay();
@@ -34,17 +34,17 @@ void Oled::loop(const Outputs &outputs)
     }
 }
 
-void Oled::_draw_normal(const Outputs &outputs)
+void Oled::_draw_normal(const State &state)
 {
-    String time = _make_time_str(outputs.get_current_time());
+    String time = _make_time_str(state.get_current_time());
     String alarm;
 
-    if (outputs.is_alarm_on())
+    if (state.is_alarm_on())
     {
-        alarm = _make_time_str(outputs.get_alarm());
+        alarm = _make_time_str(state.get_alarm());
     }
     _u8g.display();
-    _u8g.setContrast(outputs.get_display_brightness());
+    _u8g.setContrast(state.get_display_brightness());
     int alarm_x = _u8g.getDisplayWidth() / 2;
     int alarm_y = 56;
     _u8g.setFont(u8g2_font_fur35_tn);
@@ -59,14 +59,14 @@ void Oled::_draw_normal(const Outputs &outputs)
     } while (_u8g.nextPage());
 }
 
-void Oled::_draw_alarm_select(const Outputs &outputs)
+void Oled::_draw_alarm_select(const State &state)
 {
     const String off = "off";
-    const String alarm = _make_time_str(outputs.get_alarm());
+    const String alarm = _make_time_str(state.get_alarm());
     Array<String, PREDEFINED_ALARMS> alarms;
     for (int i = 0; i < PREDEFINED_ALARMS; ++i)
     {
-        alarms[i] = _make_time_str(outputs.get_predefine_alarms()[i]);
+        alarms[i] = _make_time_str(state.get_predefine_alarms()[i]);
     }
     int width = _u8g.getDisplayWidth();
     int x_1 = 1 * width / 6;
@@ -77,11 +77,11 @@ void Oled::_draw_alarm_select(const Outputs &outputs)
     int y_2 = 3 * height / 6;
     int y_3 = 5 * height / 6;
 
-    const int id = outputs.get_alarm_index();
+    const int id = state.get_alarm_index();
     _u8g.firstPage();
     do
     {
-        _u8g.setContrast(outputs.get_display_brightness());
+        _u8g.setContrast(state.get_display_brightness());
         _u8g.setFont(u8g2_font_fur11_tf);
         _draw_item(x_1, y_1, off, id == NO_ALARM);
         _draw_item(x_3, y_1, alarm, id == CUSTOM_ALARM);
@@ -110,16 +110,16 @@ void Oled::_draw_item(int x, int y, const String &str, bool selected)
     }
 }
 
-void Oled::_draw_alarm_set_hour(const Outputs &outputs)
+void Oled::_draw_alarm_set_hour(const State &state)
 {
-    const String time = _make_time_str(outputs.get_current_time());
+    const String time = _make_time_str(state.get_current_time());
 
     char hours[] = "__";
-    sprintf(hours, "%2d", outputs.get_custom_alarm().get_hour());
+    sprintf(hours, "%2d", state.get_custom_alarm().get_hour());
     char minutes[] = ":__";
-    sprintf(minutes, ":%02d", outputs.get_custom_alarm().get_minute());
+    sprintf(minutes, ":%02d", state.get_custom_alarm().get_minute());
 
-    _u8g.setContrast(outputs.get_display_brightness());
+    _u8g.setContrast(state.get_display_brightness());
     int time_x = _u8g.getDisplayWidth() / 2;
     int time_y = 56;
     _u8g.setFont(u8g2_font_fur30_tn);
@@ -139,16 +139,16 @@ void Oled::_draw_alarm_set_hour(const Outputs &outputs)
     } while (_u8g.nextPage());
 }
 
-void Oled::_draw_alarm_set_minute(const Outputs &outputs)
+void Oled::_draw_alarm_set_minute(const State &state)
 {
-    const String time = _make_time_str(outputs.get_current_time());
+    const String time = _make_time_str(state.get_current_time());
 
     char hours[] = "__:";
-    sprintf(hours, "%d:", outputs.get_custom_alarm().get_hour());
+    sprintf(hours, "%d:", state.get_custom_alarm().get_hour());
     char minutes[] = "__";
-    sprintf(minutes, "%02d", outputs.get_custom_alarm().get_minute());
+    sprintf(minutes, "%02d", state.get_custom_alarm().get_minute());
 
-    _u8g.setContrast(outputs.get_display_brightness());
+    _u8g.setContrast(state.get_display_brightness());
     int time_x = _u8g.getDisplayWidth() / 2;
     int time_y = 56;
     _u8g.setFont(u8g2_font_fur35_tn);

@@ -1,0 +1,142 @@
+#include "runner.h"
+#include "utils/ms_diff.h"
+
+namespace
+{
+    static unsigned long off_threshold = 30;
+}
+
+Runner::Runner() : _step(NORMAL), _last_change(0) {}
+
+void Runner::loop(const Inputs &inputs, State &state)
+{
+    if (_last_change == 0)
+        _last_change = inputs.now_ms();
+    state.set_now_ms(inputs.now_ms());
+    state.set_current_time(inputs.get_time());
+    switch (_step)
+    {
+    case Step::NORMAL:
+        _process_normal(inputs, state);
+        break;
+    case Step::ALARM_SELECT:
+        _process_alarm_select(inputs, state);
+        break;
+    case Step::ALARM_SET_HOUR:
+        _process_alarm_set_hour(inputs, state);
+        break;
+    case Step::ALARM_SET_MINUTE:
+        _process_alarm_set_minute(inputs, state);
+        break;
+    case Step::NO_DISPLAY:
+        _process_off(inputs, state);
+        break;
+    }
+}
+
+void Runner::_process_normal(const Inputs &inputs, State &state)
+{
+    if (inputs.red_has_been_pressed())
+    {
+        _change_step(state, Step::ALARM_SELECT);
+    }
+    else if (inputs.yellow_has_been_pressed() || inputs.green_has_been_pressed())
+    {
+        _last_change = inputs.now_ms();
+    }
+    else if (ms_diff(_last_change, inputs.now_ms()) > off_threshold)
+    {
+        _change_step(state, Step::NO_DISPLAY);
+    }
+}
+
+void Runner::_process_alarm_select(const Inputs &inputs, State &state)
+{
+    int alarm_index = state.get_alarm_index();
+    if (inputs.red_has_been_pressed())
+    {
+        if (alarm_index == NO_ALARM)
+        {
+            state.switch_off_alarm();
+            _change_step(state, Step::NORMAL);
+        }
+        else if (alarm_index == CUSTOM_ALARM)
+        {
+            _change_step(state, Step::ALARM_SET_HOUR);
+        }
+        else
+        {
+            state.set_alarm(state.get_predefine_alarms()[alarm_index]);
+            _change_step(state, Step::NORMAL);
+        }
+    }
+    else
+    {
+        if (inputs.yellow_has_been_pressed())
+            alarm_index--;
+        else if (inputs.green_has_been_pressed())
+            alarm_index++;
+        else
+            return;
+
+        if (alarm_index >= PREDEFINED_ALARMS)
+            alarm_index = NO_ALARM;
+        else if (alarm_index < NO_ALARM)
+            alarm_index = PREDEFINED_ALARMS - 1;
+
+        state.set_alarm_index(alarm_index);
+    }
+}
+
+void Runner::_process_alarm_set_hour(const Inputs &inputs, State &state)
+{
+    if (inputs.red_has_been_pressed())
+    {
+        _change_step(state, Step::ALARM_SET_MINUTE);
+    }
+    else if (inputs.yellow_has_been_pressed())
+    {
+        Time alarm = state.get_custom_alarm();
+        state.set_custom_alarm(alarm.add_hour(-1));
+    }
+    else if (inputs.green_has_been_pressed())
+    {
+        Time alarm = state.get_custom_alarm();
+        state.set_custom_alarm(alarm.add_hour(1));
+    }
+}
+
+void Runner::_process_alarm_set_minute(const Inputs &inputs, State &state)
+{
+    if (inputs.red_has_been_pressed())
+    {
+        state.set_alarm(state.get_custom_alarm());
+        _change_step(state, Step::NORMAL);
+        _last_change = inputs.now_ms();
+    }
+    else if (inputs.yellow_has_been_pressed())
+    {
+        Time alarm = state.get_custom_alarm();
+        state.set_custom_alarm(alarm.add_minute(-1));
+    }
+    else if (inputs.green_has_been_pressed())
+    {
+        Time alarm = state.get_custom_alarm();
+        state.set_custom_alarm(alarm.add_minute(1));
+    }
+}
+
+void Runner::_process_off(const Inputs &inputs, State &state)
+{
+    if (inputs.red_has_been_pressed() || inputs.yellow_has_been_pressed() || inputs.green_has_been_pressed())
+    {
+        _last_change = inputs.now_ms();
+        _change_step(state, Step::NORMAL);
+    }
+}
+
+void Runner::_change_step(State &state, Step step)
+{
+    _step = step;
+    state.set_step(step);
+}

@@ -1,26 +1,61 @@
 #pragma once
 
 #include "step.h"
-#include "inputs.h"
-#include "outputs.h"
+#include "utils/time.h"
+#include "utils/updatable.h"
+#include "utils/optional.h"
+#include "utils/array.h"
+#include "outputs/sun.h"
+
+#define NO_ALARM -2
+#define CUSTOM_ALARM -1
+#define PREDEFINED_ALARMS 6
 
 class State
 {
+private:
+    long _now_ms;
+
+    Updatable<int> _display_brightness;
+    Updatable<Time> _time;
+    Updatable<Optional<Time>> _alarm;
+    Updatable<Step> _step;
+
+    Updatable<Time> _custom_alarm;
+    typedef Array<Time, PREDEFINED_ALARMS> Alarms;
+    Alarms _alarms;
+    // Off = -2
+    // Custom = -1
+    // Predefined = [0,PREDEFINED_ALARMS[
+    Updatable<int> _alarm_index;
+
 public:
     State();
-    void setup();
-    void loop(const Inputs &inputs, Outputs &outputs);
 
-private:
-    Step _step;
-    long _last_change;
+    bool is_updated() const;
+    void clear_updated();
 
-    void _process_normal(const Inputs &inputs, Outputs &outputs);
-    void _process_alarm_select(const Inputs &inputs, Outputs &outputs);
-    void _process_alarm_on_off(const Inputs &inputs, Outputs &outputs);
-    void _process_alarm_set_hour(const Inputs &inputs, Outputs &outputs);
-    void _process_alarm_set_minute(const Inputs &inputs, Outputs &outputs);
-    void _process_off(const Inputs &inputs, Outputs &outputs);
+    inline long now_ms() const { return _now_ms; }
+    inline void set_now_ms(long value) { _now_ms = value; }
 
-    void _change_step(Outputs &outputs, Step step);
+    inline const Step &get_step() const { return *_step; }
+    inline void set_step(const Step &value) { _step = value; }
+
+    inline int get_display_brightness() const { return *_display_brightness; }
+    inline void set_display_brightness(int value) { _display_brightness = value; }
+
+    inline const Time &get_current_time() const { return *_time; }
+    inline void set_current_time(const Time &value) { _time = value; }
+
+    inline bool is_alarm_on() const { return _alarm.value().has_value(); }
+    inline const Time &get_alarm() const { return _alarm.value().value(); }
+    inline void set_alarm(const Time &value) { _alarm = value; }
+    inline void switch_off_alarm() { _alarm = Optional<Time>(); }
+
+    inline const Time &get_custom_alarm() const { return *_custom_alarm; }
+    inline void set_custom_alarm(const Time &value) { _custom_alarm = value; }
+
+    const Alarms &get_predefine_alarms() const { return _alarms; }
+    inline int get_alarm_index() const { return *_alarm_index; }
+    inline void set_alarm_index(int value) { _alarm_index = value; }
 };
