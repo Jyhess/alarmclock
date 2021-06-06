@@ -31,6 +31,8 @@ private:
     Updatable<bool> _alarm_playing;
     Optional<Time> _last_alarm;
 
+    Updatable<int> _sun_percent;
+
 public:
     State();
 
@@ -45,6 +47,9 @@ public:
 
     inline int get_display_brightness() const { return *_display_brightness; }
     inline void set_display_brightness(int value) { _display_brightness = value; }
+
+    inline int get_sun_percent() const { return *_sun_percent; }
+    inline void set_sun_percent(int value) { _sun_percent = value; }
 
     inline const Time &get_current_time() const { return *_time; }
     inline void set_current_time(const Time &value) { _time = value; }

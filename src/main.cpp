@@ -7,7 +7,7 @@
 // Module connection pins (Digital Pins)
 #define PIN_LIGHT_SENSOR A0
 #define PIN_BUZZER 2
-#define PIN_SUN 3
+#define PIN_SUN 10
 #define PIN_BUTTON_RED 11
 #define PIN_BUTTON_YELLOW 12
 #define PIN_BUTTON_GREEN 13

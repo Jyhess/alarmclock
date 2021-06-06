@@ -5,9 +5,9 @@ class Sun
 {
 private:
     int _pin;
-    int _current;
+    int _start;
     int _target;
-    long _switch_duration;
+    int _last;
     long _start_time;
 
 public:

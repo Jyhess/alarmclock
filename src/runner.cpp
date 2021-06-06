@@ -48,11 +48,20 @@ void Runner::_process_normal(const Inputs &inputs, State &state)
     else if (inputs.yellow_has_been_pressed())
     {
         _last_change = inputs.now_ms();
+        int percent = state.get_sun_percent() - 10;
+        if( percent < 0)
+            percent = 0;
+        state.set_sun_percent(percent);
     }
     else if (inputs.green_has_been_pressed())
     {
-        state.set_alarm_playing(true);
-        _change_step(state, Step::ALARM_PLAYING, "Green pressed");
+        _last_change = inputs.now_ms();
+        int percent = state.get_sun_percent() + 10;
+        if (percent > 100)
+            percent = 100;
+        state.set_sun_percent(percent);
+        //state.set_alarm_playing(true);
+        //_change_step(state, Step::ALARM_PLAYING, "Green pressed");
     }
     else if (!state.is_alarm_playing() && ms_diff(_last_change, inputs.now_ms()) > off_threshold)
     {
