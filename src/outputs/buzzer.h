@@ -6,7 +6,7 @@ class Buzzer
 {
 private:
     int _pin;
-    long _start_note_ms;
+    unsigned long _start_note_ms;
     int _note;
     bool _is_playing;
 
@@ -16,5 +16,5 @@ public:
     void loop(const State &state);
 
 private:
-    void _play(long now_ms);
+    void _play(unsigned long now_ms);
 };

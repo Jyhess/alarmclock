@@ -16,7 +16,7 @@ public:
 private:
     State _state;
     Step _step;
-    long _last_change;
+    unsigned long _last_change;
 
     void _process_normal(const Inputs &inputs);
     void _process_alarm_select(const Inputs &inputs);

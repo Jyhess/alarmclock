@@ -30,7 +30,7 @@ void Sun::loop(const State &state)
     }
     if (_start != _target)
     {
-        long elapsed_ms = ms_diff(_start_time, state.now_ms());
+        unsigned long elapsed_ms = ms_diff(_start_time, state.now_ms());
         long change = 100 * elapsed_ms / switch_duration;
         long current = 0;
         if (_start > _target)
@@ -63,21 +63,3 @@ void Sun::loop(const State &state)
     }
 }
 
-void Sun::switch_on(int percent)
-{
-    if (percent == _start)
-        return;
-    //Serial.printf("Sun switch on %d\n", percent);
-    _target = percent;
-    _start = _target;
-    analogWrite(_pin, _start);
-}
-
-void Sun::switch_off(long now_ms)
-{
-    if (_target == 0)
-        return;
-    //Serial.printf("Sun switch off\n");
-    _target = 0;
-    _start_time = now_ms;
-}

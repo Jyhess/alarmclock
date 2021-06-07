@@ -19,18 +19,18 @@ public:
     bool yellow_is_pressed() const;
     bool green_is_pressed() const;
 
-    inline long now_ms() const { return _now_ms; }
+    inline unsigned long now_ms() const { return _now_ms; }
 
     inline const Time &get_time() const { return _time; }
 
 private:
-    long _now_ms;
+    unsigned long _now_ms;
 
     Button _red;
     Button _yellow;
     Button _green;
 
     Rtc _rtc;
-    long _last_rtc_read;
+    unsigned long _last_rtc_read;
     Time _time;
 };

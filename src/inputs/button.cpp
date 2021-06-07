@@ -8,7 +8,7 @@ namespace
     static const int debounce_time = 10;
 }
 
-Button::Button(int pin) : _pin(pin), _count(0), _count_mode(CountMode::Falling), _previous_steady_state(false), _last_steady_state(false), _last_flickerable_state(false), _flickering(false), _last_debounce_time(0)
+Button::Button(int pin) : _pin(pin), _previous_steady_state(false), _last_steady_state(false), _last_flickerable_state(false), _flickering(false), _last_debounce_time(0)
 {
 }
 
@@ -21,7 +21,7 @@ void Button::setup()
     _last_flickerable_state = _previous_steady_state;
 }
 
-void Button::loop(long now_ms)
+void Button::loop(unsigned long now_ms)
 {
     // read the state of the switch/button:
     bool current_state = digitalRead(_pin) == LOW;
@@ -50,25 +50,11 @@ void Button::loop(long now_ms)
         _previous_steady_state = _last_steady_state;
         _last_steady_state = current_state;
     }
+}
 
-    if (!_flickering && _previous_steady_state != _last_steady_state)
-    {
-        //char buffer[11];
-        //snprintf_P(buffer, 11, PSTR("B %d->%d\n"), _last_steady_state, current_state);
-        //Serial.print(buffer);
-        if (_count_mode == CountMode::Both)
-            _count++;
-        else if (_count_mode == CountMode::Falling)
-        {
-            if (has_been_pressed())
-                _count++;
-        }
-        else if (_count_mode == CountMode::Rising)
-        {
-            if (has_been_released())
-                _count++;
-        }
-    }
+bool Button::has_changed() const
+{
+    return !_flickering &&_previous_steady_state != _last_steady_state;
 }
 
 int Button::get_state_raw()

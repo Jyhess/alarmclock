@@ -14,7 +14,7 @@
 class State
 {
 private:
-    long _now_ms;
+    unsigned long _now_ms;
     bool _need_oled_update;
 
     int _display_brightness;
@@ -41,7 +41,7 @@ public:
     bool is_updated() const;
     void clear_updated();
 
-    inline long now_ms() const { return _now_ms; }
+    inline unsigned long now_ms() const { return _now_ms; }
     inline void set_now_ms(long value) { _now_ms = value; }
 
     inline const Step &get_step() const { return _step; }

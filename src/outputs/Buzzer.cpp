@@ -71,7 +71,7 @@ void Buzzer::loop(const State &state)
     }
 }
 
-void Buzzer::_play(long now_ms)
+void Buzzer::_play(unsigned long now_ms)
 {
     unsigned long note_duration = ms_per_note / durations[_note];
     unsigned long note_played_ms = ms_diff(_start_note_ms, now_ms);
