@@ -21,10 +21,8 @@ public:
         set_value(value);
         return *this;
     }
-    inline const T &value() const
-    {
-        return _value;
-    }
+    inline const T &operator*() const { return _value; }
+    inline const T &value() const { return _value; }
     inline void set_value(const T &value)
     {
         _value = value;

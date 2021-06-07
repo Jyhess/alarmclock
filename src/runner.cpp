@@ -54,8 +54,6 @@ void Runner::_process_normal(const Inputs &inputs, State &state)
     {
         _last_change = inputs.now_ms();
         state.set_sun_percent(state.get_sun_percent() + 10);
-        //state.set_alarm_playing(true);
-        //_change_step(state, Step::ALARM_PLAYING, "Green pressed");
     }
     else if (inputs.yellow_is_pressed())
     {
