@@ -54,7 +54,7 @@ void Button::loop(unsigned long now_ms)
 
 bool Button::has_changed() const
 {
-    return !_flickering &&_previous_steady_state != _last_steady_state;
+    return !_flickering && _previous_steady_state != _last_steady_state;
 }
 
 int Button::get_state_raw()
@@ -75,4 +75,9 @@ bool Button::has_been_pressed() const
 bool Button::has_been_released() const
 {
     return !_flickering && _previous_steady_state && !_last_steady_state;
+}
+
+unsigned long Button::change_time(unsigned long now_ms) const
+{
+    return ms_diff(_last_debounce_time, now_ms);
 }

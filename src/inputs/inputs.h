@@ -15,9 +15,9 @@ public:
     bool red_has_been_pressed() const;
     bool yellow_has_been_pressed() const;
     bool green_has_been_pressed() const;
-    bool red_is_pressed() const;
-    bool yellow_is_pressed() const;
-    bool green_is_pressed() const;
+    unsigned long red_long_pressed(unsigned long threshold) const;
+    unsigned long yellow_long_pressed(unsigned long threshold) const;
+    unsigned long green_long_pressed(unsigned long threshold) const;
 
     inline unsigned long now_ms() const { return _now_ms; }
 

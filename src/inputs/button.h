@@ -24,5 +24,6 @@ public:
     bool is_pressed() const;
     bool has_been_pressed() const;
     bool has_been_released() const;
+    unsigned long change_time(unsigned long now_ms) const;
 };
 

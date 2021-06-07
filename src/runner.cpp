@@ -5,6 +5,7 @@ namespace
 {
     static unsigned long off_threshold = 30000;
     const char red_pressed[] = "Red pressed";
+    unsigned long long_press = 1000;
 }
 
 Runner::Runner() : _step(NORMAL), _last_change(0) {}
@@ -56,12 +57,12 @@ void Runner::_process_normal(const Inputs &inputs)
         _last_change = inputs.now_ms();
         _state.set_sun_percent(_state.get_sun_percent() + 10);
     }
-    else if (inputs.yellow_is_pressed())
+    else if (inputs.yellow_long_pressed(100))
     {
         _last_change = inputs.now_ms();
         _state.set_sun_percent(_state.get_sun_percent() - 1);
     }
-    else if (inputs.green_is_pressed())
+    else if (inputs.green_long_pressed(100))
     {
         _last_change = inputs.now_ms();
         _state.set_sun_percent(_state.get_sun_percent() + 1);
@@ -128,12 +129,12 @@ void Runner::_process_alarm_set_hour(const Inputs &inputs)
         Time alarm = _state.get_custom_alarm();
         _state.set_custom_alarm(alarm.add_hour(1));
     }
-    else if (inputs.yellow_is_pressed())
+    else if (inputs.yellow_long_pressed(long_press))
     {
         Time alarm = _state.get_custom_alarm();
         _state.set_custom_alarm(alarm.add_hour(-1));
     }
-    else if (inputs.green_is_pressed())
+    else if (inputs.green_long_pressed(long_press))
     {
         Time alarm = _state.get_custom_alarm();
         _state.set_custom_alarm(alarm.add_hour(1));
@@ -158,12 +159,12 @@ void Runner::_process_alarm_set_minute(const Inputs &inputs)
         Time alarm = _state.get_custom_alarm();
         _state.set_custom_alarm(alarm.add_minute(1));
     }
-    else if (inputs.yellow_is_pressed())
+    else if (inputs.yellow_long_pressed(long_press))
     {
         Time alarm = _state.get_custom_alarm();
         _state.set_custom_alarm(alarm.add_minute(-1));
     }
-    else if (inputs.green_is_pressed())
+    else if (inputs.green_long_pressed(long_press))
     {
         Time alarm = _state.get_custom_alarm();
         _state.set_custom_alarm(alarm.add_minute(1));
