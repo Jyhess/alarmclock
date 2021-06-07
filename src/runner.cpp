@@ -48,22 +48,26 @@ void Runner::_process_normal(const Inputs &inputs, State &state)
     else if (inputs.yellow_has_been_pressed())
     {
         _last_change = inputs.now_ms();
-        int percent = state.get_sun_percent() - 10;
-        if( percent < 0)
-            percent = 0;
-        state.set_sun_percent(percent);
+        state.set_sun_percent(0);
     }
     else if (inputs.green_has_been_pressed())
     {
         _last_change = inputs.now_ms();
-        int percent = state.get_sun_percent() + 10;
-        if (percent > 100)
-            percent = 100;
-        state.set_sun_percent(percent);
+        state.set_sun_percent(state.get_sun_percent() + 10);
         //state.set_alarm_playing(true);
         //_change_step(state, Step::ALARM_PLAYING, "Green pressed");
     }
-    else if (!state.is_alarm_playing() && ms_diff(_last_change, inputs.now_ms()) > off_threshold)
+    else if (inputs.yellow_is_pressed())
+    {
+        _last_change = inputs.now_ms();
+        state.set_sun_percent(state.get_sun_percent() - 1);
+    }
+    else if (inputs.green_is_pressed())
+    {
+        _last_change = inputs.now_ms();
+        state.set_sun_percent(state.get_sun_percent() + 1);
+    }
+    else if (!state.is_alarm_playing() && state.get_sun_percent() == 0 && ms_diff(_last_change, inputs.now_ms()) > off_threshold)
     {
         unsigned long diff = ms_diff(_last_change, inputs.now_ms());
         String reason = String("No action since ") + String(diff) + String(" ms");
@@ -125,6 +129,16 @@ void Runner::_process_alarm_set_hour(const Inputs &inputs, State &state)
         Time alarm = state.get_custom_alarm();
         state.set_custom_alarm(alarm.add_hour(1));
     }
+    else if (inputs.yellow_is_pressed())
+    {
+        Time alarm = state.get_custom_alarm();
+        state.set_custom_alarm(alarm.add_hour(-1));
+    }
+    else if (inputs.green_is_pressed())
+    {
+        Time alarm = state.get_custom_alarm();
+        state.set_custom_alarm(alarm.add_hour(1));
+    }
 }
 
 void Runner::_process_alarm_set_minute(const Inputs &inputs, State &state)
@@ -145,6 +159,16 @@ void Runner::_process_alarm_set_minute(const Inputs &inputs, State &state)
         Time alarm = state.get_custom_alarm();
         state.set_custom_alarm(alarm.add_minute(1));
     }
+    else if (inputs.yellow_is_pressed())
+    {
+        Time alarm = state.get_custom_alarm();
+        state.set_custom_alarm(alarm.add_minute(-1));
+    }
+    else if (inputs.green_is_pressed())
+    {
+        Time alarm = state.get_custom_alarm();
+        state.set_custom_alarm(alarm.add_minute(1));
+    }
 }
 
 void Runner::_process_alarm_playing(const Inputs &inputs, State &state)
@@ -156,6 +180,7 @@ void Runner::_process_alarm_playing(const Inputs &inputs, State &state)
         _change_step(state, Step::NORMAL, "Red or yellow pressed");
     }
 }
+
 void Runner::_process_off(const Inputs &inputs, State &state)
 {
     if (inputs.red_has_been_pressed() || inputs.yellow_has_been_pressed() || inputs.green_has_been_pressed())

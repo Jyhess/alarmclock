@@ -8,6 +8,9 @@ Inputs::Inputs(int red_pin, int yellow_pin, int green_pin) : _now_ms(0), _red(re
 void Inputs::setup()
 {
     _rtc.setup();
+    _red.setup();
+    _green.setup();
+    _yellow.setup();
 }
 
 void Inputs::loop()
@@ -26,14 +29,30 @@ void Inputs::loop()
 
 bool Inputs::red_has_been_pressed() const
 {
-    return _red.is_pressed();
+    return _red.has_been_pressed();
 }
 
 bool Inputs::yellow_has_been_pressed() const
 {
+    return _yellow.has_been_pressed();
+}
+
+bool Inputs::green_has_been_pressed() const
+{
+    return _green.has_been_pressed();
+}
+
+bool Inputs::red_is_pressed() const
+{
+    return _red.is_pressed();
+}
+
+bool Inputs::yellow_is_pressed() const
+{
     return _yellow.is_pressed();
 }
-bool Inputs::green_has_been_pressed() const
+
+bool Inputs::green_is_pressed() const
 {
     return _green.is_pressed();
 }

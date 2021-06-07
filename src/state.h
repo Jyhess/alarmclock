@@ -5,6 +5,7 @@
 #include "utils/updatable.h"
 #include "utils/optional.h"
 #include "utils/array.h"
+#include "utils/range.h"
 
 #define NO_ALARM -2
 #define CUSTOM_ALARM -1
@@ -31,7 +32,7 @@ private:
     Updatable<bool> _alarm_playing;
     Optional<Time> _last_alarm;
 
-    Updatable<int> _sun_percent;
+    Updatable<Range<int, 0, 100>> _sun_percent;
 
 public:
     State();
@@ -48,7 +49,7 @@ public:
     inline int get_display_brightness() const { return *_display_brightness; }
     inline void set_display_brightness(int value) { _display_brightness = value; }
 
-    inline int get_sun_percent() const { return *_sun_percent; }
+    inline int get_sun_percent() const { return _sun_percent->value(); }
     inline void set_sun_percent(int value) { _sun_percent = value; }
 
     inline const Time &get_current_time() const { return *_time; }

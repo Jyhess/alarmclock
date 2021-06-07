@@ -15,6 +15,9 @@ public:
     bool red_has_been_pressed() const;
     bool yellow_has_been_pressed() const;
     bool green_has_been_pressed() const;
+    bool red_is_pressed() const;
+    bool yellow_is_pressed() const;
+    bool green_is_pressed() const;
 
     inline long now_ms() const { return _now_ms; }
 

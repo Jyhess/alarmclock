@@ -26,6 +26,8 @@ public:
         return *this;
     }
     inline const T &operator*() const { return _value; }
+    inline const T *operator->() const { return &_value; }
+    inline T const *operator->() { return &_value; }
 
     inline bool is_updated() const
     {

@@ -53,13 +53,12 @@ void Sun::loop(const State &state)
         }
         if (current != _last)
         {
-            Serial.printf("Sun switching %d", _start);
-            Serial.printf(" => %d", current);
+            int value = current * current * 255 / (100 * 100);
+            // char buffer[30];
+            // snprintf_P(buffer, 30, PSTR("Sun %d->%d %d%%=%d\n"), _start, _target, current, value);
+            // Serial.print(buffer);
+            analogWrite(_pin, value);
             _last = current;
-            current = current * current * 255 / (100 * 100);
-            Serial.printf(" => %d", current);
-            Serial.printf(" => %d\n", _target);
-            analogWrite(_pin, current);
         }
     }
 }
