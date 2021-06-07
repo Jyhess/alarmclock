@@ -1,31 +1,31 @@
 #pragma once
 
 template <class T>
-class default_value
+struct default_value
 {
-    static const T value = T();
+    static constexpr T value = {};
 };
 
 template <>
-class default_value<int>
+struct default_value<int>
 {
-    static const int value = 0;
+    static constexpr int value = 0;
 };
 
 template <>
-class default_value<long>
+struct default_value<long>
 {
-    static const long value = 0;
+    static constexpr long value = 0;
 };
 
 template <>
-class default_value<unsigned long>
+struct default_value<unsigned long>
 {
-    static const unsigned long value = 0;
+    static constexpr unsigned long value = 0;
 };
 
 template <>
-class default_value<unsigned int>
+struct default_value<unsigned int>
 {
-    static const unsigned int value = 0;
+    static constexpr unsigned int value = 0;
 };

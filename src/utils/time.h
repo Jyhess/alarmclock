@@ -7,7 +7,7 @@ private:
     int _minute;
 
 public:
-    inline Time() : _hour(0), _minute(0) {}
+    inline constexpr Time() : _hour(0), _minute(0) {}
     inline Time(int hour, int minute) : _hour(hour), _minute(minute) {}
 
     inline int get_hour() const { return _hour; }

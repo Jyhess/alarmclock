@@ -1,5 +1,7 @@
 #pragma once
 
+#include "utils/default_value.h"
+
 template <class T>
 class Optional
 {
@@ -8,7 +10,7 @@ private:
     bool _has_value;
 
 public:
-    Optional() : _has_value(false) {}
+    constexpr Optional() : _value(default_value<T>::value), _has_value(false) {}
     Optional(const T &value) : _value(value), _has_value(true) {}
 
     Optional &operator=(const Optional &other)
@@ -26,6 +28,8 @@ public:
         return *this;
     }
     inline const T &operator*() const { return _value; }
+    inline const T *operator->() const { return &_value; }
+    inline T *operator->() { return &_value; }
 
     inline bool has_value() const { return _has_value; }
     inline void reset() { _has_value = false; }

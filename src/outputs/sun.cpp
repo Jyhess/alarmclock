@@ -20,6 +20,10 @@ void Sun::setup()
 void Sun::loop(const State &state)
 {
     int target = state.get_sun_percent();
+    if (state.is_alarm_playing())
+    {
+        target = state.get_alarm_percent();
+    }
     if (target != _target)
     {
         // Reset timer only if not already changing
@@ -62,4 +66,3 @@ void Sun::loop(const State &state)
         }
     }
 }
-

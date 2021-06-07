@@ -6,6 +6,7 @@ namespace
     static unsigned long off_threshold = 30000;
     const char red_pressed[] = "Red pressed";
     unsigned long long_press = 1000;
+    int alarm_switch_duration = 30000;
 }
 
 Runner::Runner() : _step(NORMAL), _last_change(0) {}
@@ -46,6 +47,11 @@ void Runner::_process_normal(const Inputs &inputs)
     if (inputs.red_has_been_pressed())
     {
         _change_step(Step::ALARM_SELECT, red_pressed);
+    }
+    else if(inputs.yellow_has_been_pressed() && inputs.green_has_been_pressed())
+    {
+        _state.start_playing_alarm();
+        _change_step(Step::ALARM_PLAYING, "Alarm manual");
     }
     else if (inputs.yellow_has_been_pressed())
     {
@@ -173,10 +179,18 @@ void Runner::_process_alarm_set_minute(const Inputs &inputs)
 
 void Runner::_process_alarm_playing(const Inputs &inputs)
 {
+    int percent = ms_diff(_state.get_alarm_start_time(), _state.now_ms()) * 100 / alarm_switch_duration;
+    _state.set_alarm_percent(percent);
     if (inputs.red_has_been_pressed() || inputs.yellow_has_been_pressed())
     {
         _last_change = inputs.now_ms();
-        _state.set_alarm_playing(false);
+        _state.stop_alarm();
+        _change_step(Step::NORMAL, "Red or yellow pressed");
+    }
+    else if (inputs.green_has_been_pressed() || inputs.yellow_has_been_pressed())
+    {
+        _last_change = inputs.now_ms();
+        _state.snooze_alarm();
         _change_step(Step::NORMAL, "Red or yellow pressed");
     }
 }
@@ -212,6 +226,6 @@ void Runner::_trigger_alarm_if_needed()
     // Alarm has already been triggered this minute
     if (_state.alarm_already_started_this_minute())
         return;
-    _state.set_alarm_playing(true);
+    _state.start_playing_alarm();
     _change_step(Step::ALARM_PLAYING, "Alarm triggered");
 }

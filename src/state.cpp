@@ -1,6 +1,6 @@
 #include "state.h"
 
-State::State() : _now_ms(0), _need_oled_update(false), _display_brightness(0), _alarm_index(NO_ALARM), _alarm_playing(false), _sun_percent(0)
+State::State() : _now_ms(0), _need_oled_update(false), _display_brightness(0), _alarm_index(NO_ALARM), _sun_percent(0)
 {
     _alarms[0] = Time(6, 30);
     _alarms[1] = Time(7, 0);

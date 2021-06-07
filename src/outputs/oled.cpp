@@ -46,7 +46,8 @@ void Oled::_draw_normal(const State &state)
     }
     if (state.is_alarm_playing())
     {
-        alarm = String("> ") + alarm + String(" <");
+        //alarm = String("> ") + alarm + String(" <");
+        alarm = alarm + String(" > ") + String(state.get_alarm_percent()) + String("%");
     }
     _u8g.display();
     _u8g.setContrast(state.get_display_brightness());

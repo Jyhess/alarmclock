@@ -9,7 +9,7 @@ private:
     T _value;
 
 public:
-    Range() : _value(default_value<T>::value) {}
+    constexpr Range() : _value(default_value<T>::value) {}
     Range(const Range &other) = default;
     Range(const T &value) : _value(value)
     {
@@ -79,3 +79,9 @@ Range<T, Min, Max> operator-(const Range<T, Min, Max> &range, const T &value)
 {
     return Range<T, Min, Max>(range - value);
 }
+
+template <class T, T Min, T Max>
+struct default_value<Range<T, Min, Max>>
+{
+    static const unsigned int value = default_value<T>::value;
+};

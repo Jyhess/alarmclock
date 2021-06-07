@@ -57,7 +57,7 @@ void Buzzer::loop(const State &state)
         noTone(_pin);
         Serial.print("Buzzer stopped\n");
     }
-    else if(!_is_playing && state.is_alarm_playing())
+    else if(!_is_playing && state.is_alarm_playing() && state.get_alarm_percent() >= 100)
     {
         _is_playing = true;
         _note = 0;
