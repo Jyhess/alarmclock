@@ -67,7 +67,7 @@ void Oled::_draw_normal(const State &state)
 void Oled::_draw_alarm_select(const State &state)
 {
     const String off = "off";
-    const String alarm = _make_time_str(state.get_alarm());
+    const String alarm = _make_time_str(state.get_custom_alarm());
     Array<String, PREDEFINED_ALARMS> alarms;
     for (int i = 0; i < PREDEFINED_ALARMS; ++i)
     {
@@ -172,11 +172,9 @@ void Oled::_draw_alarm_set_minute(const State &state)
     } while (_u8g.nextPage());
 }
 
-
 String Oled::_make_time_str(const Time &time) const
 {
     String data("__:__");
-    char *begin = data.begin();
-    sprintf(begin, "%d:%02d", time.get_hour(), time.get_minute());
+    snprintf_P(data.begin(), data.length()+1, PSTR("%d:%02d"), time.get_hour(), time.get_minute());
     return data;
 }

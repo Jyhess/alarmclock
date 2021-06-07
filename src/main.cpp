@@ -15,7 +15,6 @@
 Outputs g_outputs(PIN_BUZZER, PIN_SUN);
 Inputs g_inputs(PIN_BUTTON_RED, PIN_BUTTON_YELLOW, PIN_BUTTON_GREEN);
 Runner g_runner;
-State g_state;
 
 void setup()
 {
@@ -29,7 +28,6 @@ void setup()
 void loop()
 {
   g_inputs.loop();
-  g_runner.loop(g_inputs, g_state);
-  g_outputs.loop(g_state);
-  g_state.clear_updated();
+  g_runner.loop(g_inputs);
+  g_outputs.loop(g_runner.state());
 }
