@@ -1,7 +1,7 @@
 #include "inputs/inputs.h"
 #include "utils/ms_diff.h"
 
-Inputs::Inputs(int red_pin, int yellow_pin, int green_pin) : _now_ms(0), _red(red_pin), _yellow(yellow_pin), _green(green_pin), _last_rtc_read(0)
+Inputs::Inputs(uint8_t red_pin, uint8_t yellow_pin, uint8_t green_pin) : _now_ms(0), _red(red_pin), _yellow(yellow_pin), _green(green_pin), _last_rtc_read(0)
 {
 }
 
@@ -21,7 +21,7 @@ void Inputs::loop()
     _green.loop(_now_ms);
     if (ms_diff(_last_rtc_read, _now_ms) > 1000)
     {
-        RtcDateTime now = _rtc.GetDateTime();
+        const RtcDateTime now = _rtc.GetDateTime();
         _time = Time(now.Hour(), now.Minute());
         _last_rtc_read = _now_ms;
     }

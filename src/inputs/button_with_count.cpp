@@ -1,6 +1,6 @@
 #include "inputs/button_with_count.h"
 
-ButtonWithCount::ButtonWithCount(int pin) : _button(pin), _count(0), _count_mode(CountMode::Falling)
+ButtonWithCount::ButtonWithCount(uint8_t pin) : _button(pin), _count(0), _count_mode(CountMode::Falling)
 {
 }
 

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdint.h>
+
 #include "step.h"
 #include "utils/time.h"
 #include "utils/updatable.h"
@@ -17,7 +19,7 @@ private:
     unsigned long _now_ms;
     bool _need_oled_update;
 
-    int _display_brightness;
+    uint8_t _display_brightness;
     Time _time;
     Optional<Time> _alarm;
     Step _step;
@@ -28,13 +30,13 @@ private:
     // Off = -2
     // Custom = -1
     // Predefined = [0,PREDEFINED_ALARMS[
-    int _alarm_index;
+    int8_t _alarm_index;
 
     Optional<unsigned long> _alarm_start_time;
-    Optional<Range<int, 0, 100>> _alarm_percent;
+    Optional<Range<uint8_t, 0, 100>> _alarm_percent;
     Optional<Time> _last_alarm;
 
-    Range<int, 0, 100> _sun_percent;
+    Range<uint8_t, 0, 100> _sun_percent;
 
 public:
     State();
@@ -52,15 +54,15 @@ public:
         _need_oled_update = true;
     }
 
-    inline int get_display_brightness() const { return _display_brightness; }
-    inline void set_display_brightness(int value)
+    inline uint8_t get_display_brightness() const { return _display_brightness; }
+    inline void set_display_brightness(uint8_t value)
     {
         _display_brightness = value;
         _need_oled_update = true;
     }
 
-    inline int get_sun_percent() const { return *_sun_percent; }
-    inline void set_sun_percent(int value) { _sun_percent = value; }
+    inline uint8_t get_sun_percent() const { return *_sun_percent; }
+    inline void set_sun_percent(uint8_t value) { _sun_percent = value; }
 
     inline const Time &get_current_time() const { return _time; }
     inline void set_current_time(const Time &value)
@@ -86,16 +88,16 @@ public:
     }
 
     const Alarms &get_predefine_alarms() const { return _alarms; }
-    inline int get_alarm_index() const { return _alarm_index; }
-    inline void set_alarm_index(int value)
+    inline int8_t get_alarm_index() const { return _alarm_index; }
+    inline void set_alarm_index(int8_t value)
     {
         _alarm_index = value;
         _need_oled_update = true;
     }
 
     inline bool is_alarm_playing() const { return _alarm_start_time.has_value(); }
-    inline int get_alarm_percent() const { return _alarm_percent->value(); }
-    inline void set_alarm_percent(int percent) { _alarm_percent = percent; }
+    inline uint8_t get_alarm_percent() const { return _alarm_percent->value(); }
+    inline void set_alarm_percent(uint8_t percent) { _alarm_percent = percent; }
 
     inline unsigned long get_alarm_start_time() const { return *_alarm_start_time; }
     inline void start_playing_alarm()

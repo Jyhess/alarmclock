@@ -8,7 +8,7 @@ namespace
     static const int debounce_time = 10;
 }
 
-Button::Button(int pin) : _pin(pin), _previous_steady_state(false), _last_steady_state(false), _last_flickerable_state(false), _flickering(false), _last_debounce_time(0)
+Button::Button(uint8_t pin) : _pin(pin), _previous_steady_state(false), _last_steady_state(false), _last_flickerable_state(false), _flickering(false), _last_debounce_time(0)
 {
 }
 

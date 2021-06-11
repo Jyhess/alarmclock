@@ -7,7 +7,7 @@
 class Inputs
 {
 public:
-    Inputs(int red_pin, int yellow_pin, int green_pin);
+    Inputs(uint8_t red_pin, uint8_t yellow_pin, uint8_t green_pin);
 
     void setup();
     void loop();

@@ -1,9 +1,11 @@
 #pragma once
 
+#include <stdint.h>
+
 class Button
 {
 private:
-    int _pin;
+    uint8_t _pin;
 
     bool _previous_steady_state;  // the previous steady state from the input pin, used to detect pressed and released event
     bool _last_steady_state;      // the last steady state from the input pin
@@ -13,7 +15,7 @@ private:
     unsigned long _last_debounce_time; // the last time the output pin was toggled
 
 public:
-    Button(int pin);
+    Button(uint8_t pin);
 
     void setup();
     void loop(unsigned long now_ms);

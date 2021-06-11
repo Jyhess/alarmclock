@@ -5,6 +5,8 @@
 #include "inputs/inputs.h"
 #include "state.h"
 
+//#define DEBUG_STEP
+
 class Runner
 {
 public:
@@ -26,6 +28,12 @@ private:
     void _process_alarm_playing(const Inputs &inputs);
     void _process_off(const Inputs &inputs);
 
-    void _change_step(Step step, const char *reason = nullptr);
+    void _change_step(
+        Step step
+#ifdef DEBUG_STEP
+        ,
+        const char *reason = nullptr
+#endif
+    );
     void _trigger_alarm_if_needed();
 };

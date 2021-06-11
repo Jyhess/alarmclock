@@ -8,13 +8,8 @@ Rtc::Rtc() : _rtc(Wire)
 
 void Rtc::setup()
 {
-
-    Serial.print("compiled: ");
-    Serial.print(__DATE__);
-    Serial.println(__TIME__);
-
     _rtc.Begin();
-
+#ifdef DEBUG_RTC
     RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
     printDateTime(compiled);
     Serial.println();
@@ -65,6 +60,16 @@ void Rtc::setup()
     {
         Serial.println("RTC is the same as compile time! (not expected but all is fine)");
     }
+#else
+    _rtc.SetIsRunning(true);
+    const RtcDateTime now = _rtc.GetDateTime();
+    const RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
+    if (now < compiled)
+    {
+        Serial.println("RTC time set");
+        _rtc.SetDateTime(compiled);
+    }
+#endif
 
     // never assume the Rtc was last configured by you, so
     // just clear them to your needed state
@@ -74,27 +79,29 @@ void Rtc::setup()
 
 RtcDateTime Rtc::GetDateTime()
 {
+#ifdef DEBUG_RTC
     if (!_rtc.IsDateTimeValid())
     {
+        Serial.print("RTC error: ");
         if (_rtc.LastError() != 0)
         {
             // we have a communications error
             // see https://www.arduino.cc/en/Reference/WireEndTransmission for
             // what the number means
-            Serial.print("RTC communications error = ");
             Serial.println(_rtc.LastError());
         }
         else
         {
             // Common Causes:
             //    1) the battery on the device is low or even missing and the power line was disconnected
-            Serial.println("RTC lost confidence in the DateTime!");
+            Serial.println("battery HS");
         }
     }
-
+#endif
     return _rtc.GetDateTime();
 }
 
+#ifdef DEBUG_RTC
 void Rtc::printDateTime(const RtcDateTime &dt) const
 {
     char datestring[20];
@@ -110,3 +117,4 @@ void Rtc::printDateTime(const RtcDateTime &dt) const
                dt.Second());
     Serial.print(datestring);
 }
+#endif

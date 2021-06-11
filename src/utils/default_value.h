@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdint.h>
+
 template <class T>
 struct default_value
 {
@@ -25,7 +27,13 @@ struct default_value<unsigned long>
 };
 
 template <>
-struct default_value<unsigned int>
+struct default_value<uint8_t>
 {
-    static constexpr unsigned int value = 0;
+    static constexpr int value = 0;
+};
+
+template <>
+struct default_value<uint16_t>
+{
+    static constexpr int value = 0;
 };

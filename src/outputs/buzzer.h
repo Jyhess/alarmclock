@@ -5,13 +5,13 @@
 class Buzzer
 {
 private:
-    int _pin;
+    uint8_t _pin;
     unsigned long _start_note_ms;
     int _note;
     bool _is_playing;
 
 public:
-    Buzzer(int pin);
+    Buzzer(uint8_t pin);
     void setup();
     void loop(const State &state);
 

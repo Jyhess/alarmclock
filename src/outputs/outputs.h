@@ -14,7 +14,7 @@ private:
 
 public:
     Outputs(
-        int buzeer_pin, int sun_pin
+        uint8_t buzeer_pin, uint8_t sun_pin
 #ifndef OLED_I2C
         ,
         uint8_t oled_clock, uint8_t oled_data, uint8_t oled_cs, uint8_t oled_dc, uint8_t oled_reset

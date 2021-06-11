@@ -15,5 +15,7 @@ public:
     void setup();
     RtcDateTime GetDateTime();
 
+#ifdef DEBUG_RTC
     void printDateTime(const RtcDateTime &dt) const;
+#endif
 };

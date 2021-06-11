@@ -30,10 +30,10 @@ Runner g_runner;
 void setup()
 {
   Serial.begin(57600);
-  Serial.println("Running setup...");
+  //Serial.println("Running setup...");
   g_outputs.setup();
   g_inputs.setup();
-  Serial.println("Setup done");
+  //Serial.println("Setup done");
 }
 
 void loop()
