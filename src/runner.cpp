@@ -81,9 +81,22 @@ void Runner::_process_normal(const Inputs &inputs)
         _last_change = inputs.now_ms();
         _state.set_sun_percent(_state.get_sun_percent() + 1);
     }
-    else if (!_state.is_alarm_playing() && _state.get_sun_percent() == 0 && ms_diff(_last_change, inputs.now_ms()) > off_threshold)
+    else if (inputs.is_dark())
     {
-        CHANGE_STEP(Step::NO_DISPLAY, "No actions");
+        if (!_state.is_alarm_playing() && _state.get_sun_percent() == 0 && ms_diff(_last_change, inputs.now_ms()) > off_threshold)
+        {
+            CHANGE_STEP(Step::NO_DISPLAY, "No actions in dark");
+        }
+        else
+        {
+            _state.set_display_brightness(0);
+        }
+    }
+    else
+    {
+        // No scrren off in light
+        _last_change = inputs.now_ms();
+        _state.set_display_brightness(255);
     }
 }
 
@@ -207,6 +220,11 @@ void Runner::_process_off(const Inputs &inputs)
     {
         _last_change = inputs.now_ms();
         CHANGE_STEP(Step::NORMAL, "Button pressed");
+    }
+    else if (!inputs.is_dark())
+    {
+        _last_change = inputs.now_ms();
+        CHANGE_STEP(Step::NORMAL, "Light detected");
     }
 }
 
