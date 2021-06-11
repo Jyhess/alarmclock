@@ -1,0 +1,63 @@
+#include <Arduino.h>
+
+#include "inputs/button_capacitive.h"
+#include "utils/ms_diff.h"
+
+namespace
+{
+
+}
+
+ButtonCapacitive::ButtonCapacitive(uint8_t pin) : _pin(pin), _previous_state(false), _current_state(false), _last_change(0)
+{
+}
+
+void ButtonCapacitive::setup()
+{
+    pinMode(_pin, INPUT);
+
+    _previous_state = read_state();
+    _current_state = _previous_state;
+}
+
+void ButtonCapacitive::loop(unsigned long now_ms)
+{
+    // read the state of the switch/button:
+    _previous_state = _current_state;
+    _current_state = read_state();
+
+    if (_previous_state != _current_state)
+    {
+        _last_change = now_ms;
+    }
+}
+
+bool ButtonCapacitive::read_state()
+{
+    return digitalRead(_pin) == HIGH;
+}
+
+bool ButtonCapacitive::has_changed() const
+{
+    return _previous_state != _current_state;
+}
+
+bool ButtonCapacitive::is_pressed() const
+{
+    return _current_state;
+}
+
+bool ButtonCapacitive::has_been_pressed() const
+{
+    return !_previous_state && _current_state;
+}
+
+bool ButtonCapacitive::has_been_released() const
+{
+    return _previous_state && !_current_state;
+}
+
+unsigned long ButtonCapacitive::change_time(unsigned long now_ms) const
+{
+    return ms_diff(_last_change, now_ms);
+}

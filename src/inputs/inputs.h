@@ -1,6 +1,6 @@
 #pragma once
 
-#include "inputs/button.h"
+#include "inputs/button_capacitive.h"
 #include "inputs/rtc.h"
 #include "utils/time.h"
 
@@ -26,9 +26,9 @@ public:
 private:
     unsigned long _now_ms;
 
-    Button _red;
-    Button _yellow;
-    Button _green;
+    ButtonCapacitive _red;
+    ButtonCapacitive _yellow;
+    ButtonCapacitive _green;
 
     Rtc _rtc;
     unsigned long _last_rtc_read;
