@@ -33,6 +33,7 @@ void setup()
   //Serial.println("Running setup...");
   g_outputs.setup();
   g_inputs.setup();
+  g_runner.setup(g_inputs);
   //Serial.println("Setup done");
 }
 

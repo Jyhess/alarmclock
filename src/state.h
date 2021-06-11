@@ -9,9 +9,9 @@
 #include "utils/array.h"
 #include "utils/range.h"
 
-#define NO_ALARM -2
-#define CUSTOM_ALARM -1
 #define PREDEFINED_ALARMS 6
+#define NO_ALARM PREDEFINED_ALARMS
+#define CUSTOM_ALARM PREDEFINED_ALARMS+1
 
 class State
 {
@@ -27,10 +27,10 @@ private:
     Time _custom_alarm;
     typedef Array<Time, PREDEFINED_ALARMS> Alarms;
     Alarms _alarms;
-    // Off = -2
-    // Custom = -1
+    // Off = 6
+    // Custom = 7
     // Predefined = [0,PREDEFINED_ALARMS[
-    int8_t _alarm_index;
+    uint8_t _alarm_index;
 
     Optional<unsigned long> _alarm_start_time;
     Optional<Range<uint8_t, 0, 100>> _alarm_percent;
@@ -88,8 +88,9 @@ public:
     }
 
     const Alarms &get_predefine_alarms() const { return _alarms; }
-    inline int8_t get_alarm_index() const { return _alarm_index; }
-    inline void set_alarm_index(int8_t value)
+    inline const Time &get_predefine_alarm(uint8_t alarm_index) const { return _alarms[alarm_index]; }
+    inline uint8_t get_alarm_index() const { return _alarm_index; }
+    inline void set_alarm_index(uint8_t value)
     {
         _alarm_index = value;
         _need_oled_update = true;

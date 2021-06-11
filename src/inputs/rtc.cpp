@@ -101,6 +101,25 @@ RtcDateTime Rtc::GetDateTime()
     return _rtc.GetDateTime();
 }
 
+Time Rtc::get_time()
+{
+    const RtcDateTime now = GetDateTime();
+    return Time(now.Hour(), now.Minute());
+}
+
+void Rtc::save_alarm(const Time &time, uint8_t alarm_index)
+{
+    DS3231AlarmOne alarm(0, time.get_hour(), time.get_minute(), alarm_index, DS3231AlarmOneControl::DS3231AlarmOneControl_HoursMinutesSecondsMatch);
+    _rtc.SetAlarmOne(alarm);
+}
+
+void Rtc::read_alarm(Time &time, uint8_t &alarm_index)
+{
+    auto dt = _rtc.GetAlarmOne();
+    time = Time(dt.Hour(), dt.Minute());
+    alarm_index = dt.Second();
+}
+
 #ifdef DEBUG_RTC
 void Rtc::printDateTime(const RtcDateTime &dt) const
 {

@@ -13,6 +13,8 @@ public:
     void setup();
     void loop();
 
+    inline Rtc &rtc() { return _rtc; }
+
     bool red_has_been_pressed() const;
     bool yellow_has_been_pressed() const;
     bool green_has_been_pressed() const;

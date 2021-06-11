@@ -82,7 +82,7 @@ void Oled::_draw_alarm_select(const State &state)
     Array<String, PREDEFINED_ALARMS> alarms;
     for (uint8_t i = 0; i < PREDEFINED_ALARMS; ++i)
     {
-        alarms[i] = _make_time_str(state.get_predefine_alarms()[i]);
+        alarms[i] = _make_time_str(state.get_predefine_alarm(i));
     }
     const u8g2_uint_t width = _u8g.getDisplayWidth();
     const u8g2_uint_t x_1 = 1 * width / 6;
@@ -93,7 +93,7 @@ void Oled::_draw_alarm_select(const State &state)
     const u8g2_uint_t y_2 = 3 * height / 6;
     const u8g2_uint_t y_3 = 5 * height / 6;
 
-    const int id = state.get_alarm_index();
+    const uint8_t id = state.get_alarm_index();
     _u8g.firstPage();
     do
     {

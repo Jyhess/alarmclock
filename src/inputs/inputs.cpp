@@ -60,7 +60,6 @@ unsigned long Inputs::green_long_pressed(unsigned long threshold) const
 
 void Inputs::_read_rtc()
 {
-    const RtcDateTime now = _rtc.GetDateTime();
-    _time = Time(now.Hour(), now.Minute());
+    _time = _rtc.get_time();
     _last_rtc_read = _now_ms;
 }

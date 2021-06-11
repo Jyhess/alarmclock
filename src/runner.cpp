@@ -17,7 +17,34 @@ namespace
     const unsigned int alarm_switch_duration = 30000;
 }
 
-Runner::Runner() : _step(NORMAL), _last_change(0) {}
+Runner::Runner() : _step(NORMAL), _last_change(0), _rtc(nullptr) {}
+
+void Runner::setup(Inputs &inputs)
+{
+    _rtc = &inputs.rtc();
+    Time custom_alarm;
+    uint8_t alarm_index = NO_ALARM;
+    _rtc->read_alarm(custom_alarm, alarm_index);
+    _state.set_alarm_index(alarm_index);
+    _state.set_custom_alarm(custom_alarm);
+    if (alarm_index == NO_ALARM)
+    {
+        _state.switch_off_alarm();
+    }
+    else if (alarm_index == CUSTOM_ALARM)
+    {
+        _state.set_alarm(custom_alarm);
+    }
+    else if (alarm_index < PREDEFINED_ALARMS)
+    {
+        _state.set_alarm(_state.get_predefine_alarm(alarm_index));
+    }
+    else
+    {
+        // Weired saved data
+        _state.switch_off_alarm();
+    }
+}
 
 void Runner::loop(const Inputs &inputs)
 {
@@ -108,6 +135,7 @@ void Runner::_process_alarm_select(const Inputs &inputs)
         if (alarm_index == NO_ALARM)
         {
             _state.switch_off_alarm();
+            _rtc->save_alarm(_state.get_custom_alarm(), _state.get_alarm_index());
             CHANGE_STEP(Step::NORMAL, red_pressed);
         }
         else if (alarm_index == CUSTOM_ALARM)
@@ -116,24 +144,29 @@ void Runner::_process_alarm_select(const Inputs &inputs)
         }
         else
         {
-            _state.set_alarm(_state.get_predefine_alarms()[alarm_index]);
+            _state.set_alarm(_state.get_predefine_alarm(alarm_index));
+            _rtc->save_alarm(_state.get_custom_alarm(), _state.get_alarm_index());
             CHANGE_STEP(Step::NORMAL, red_pressed);
         }
     }
     else
     {
         if (inputs.yellow_has_been_pressed())
-            alarm_index--;
+        {
+            if (alarm_index == 0)
+                alarm_index = CUSTOM_ALARM;
+            else
+                alarm_index--;
+        }
         else if (inputs.green_has_been_pressed())
-            alarm_index++;
+        {
+            if (alarm_index == CUSTOM_ALARM)
+                alarm_index = 0;
+            else
+                alarm_index++;
+        }
         else
             return;
-
-        if (alarm_index >= PREDEFINED_ALARMS)
-            alarm_index = NO_ALARM;
-        else if (alarm_index < NO_ALARM)
-            alarm_index = PREDEFINED_ALARMS - 1;
-
         _state.set_alarm_index(alarm_index);
     }
 }
@@ -171,6 +204,7 @@ void Runner::_process_alarm_set_minute(const Inputs &inputs)
     if (inputs.red_has_been_pressed())
     {
         _state.set_alarm(_state.get_custom_alarm());
+        _rtc->save_alarm(_state.get_custom_alarm(), _state.get_alarm_index());
         CHANGE_STEP(Step::NORMAL, red_pressed);
         _last_change = inputs.now_ms();
     }
