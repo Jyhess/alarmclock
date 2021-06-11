@@ -2,6 +2,17 @@
 
 #include <stdint.h>
 
+// Possible to save 100 bytes
+//struct Bits
+//{
+//    unsigned previous_steady_state : 1, last_steady_state : 1, last_flickerable_state : 1, flickering : 1, b4 : 1, b5 : 1, b6 : 1, b7 : 1;
+//};
+//union CBits
+//{
+//    Bits bits;
+//    unsigned char byte;
+//};
+
 class Button
 {
 private:
@@ -20,7 +31,7 @@ public:
     void setup();
     void loop(unsigned long now_ms);
 
-    inline int get_state() const { return _last_steady_state; }
+    inline bool get_state() const { return _last_steady_state; }
     int get_state_raw();
     bool has_changed() const;
     bool is_pressed() const;

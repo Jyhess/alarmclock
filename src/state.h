@@ -36,7 +36,7 @@ private:
     Optional<Range<uint8_t, 0, 100>> _alarm_percent;
     Optional<Time> _last_alarm;
 
-    Range<uint8_t, 0, 100> _sun_percent;
+    Range<int8_t, 0, 100> _sun_percent;
 
 public:
     State();

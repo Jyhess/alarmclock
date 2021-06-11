@@ -19,7 +19,7 @@ void Sun::setup()
 
 void Sun::loop(const State &state)
 {
-    uint8_t target = state.get_sun_percent();
+    auto target = state.get_sun_percent();
     if (state.is_alarm_playing())
     {
         target = state.get_alarm_percent();
@@ -35,8 +35,8 @@ void Sun::loop(const State &state)
     if (_start != _target)
     {
         unsigned long elapsed_ms = ms_diff(_start_time, state.now_ms());
-        uint8_t change = 100 * elapsed_ms / switch_duration;
-        unsigned long current = 0;  // Need unsigned long to have computation place
+        unsigned long change = 100 * elapsed_ms / switch_duration;
+        long current = 0;  // Need long to have computation place
         if (_start > _target)
         {
             current = _start - change;
@@ -58,9 +58,9 @@ void Sun::loop(const State &state)
         if (current != _last)
         {
             uint8_t value = current * current * 255 / (100 * 100);
-            // char buffer[30];
-            // snprintf_P(buffer, 30, PSTR("Sun %d->%d %d%%=%d\n"), _start, _target, current, value);
-            // Serial.print(buffer);
+            //char buffer[30];
+            //snprintf_P(buffer, 30, PSTR("Sun %d->%d %d%%=%d\n"), _start, _target, current, value);
+            //Serial.print(buffer);
             analogWrite(_pin, value);
             _last = current;
         }

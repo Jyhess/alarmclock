@@ -33,16 +33,12 @@ public:
     }
     Range &operator+=(T value)
     {
-        _value += value;
-        if (_value > Max)
-            _value = Max;
+        set_value(_value + value);
         return *this;
     }
     Range &operator-=(T value)
     {
-        _value += value;
-        if (_value < Min)
-            _value = Min;
+        set_value(_value - value);
         return *this;
     }
     inline Range &operator++()
