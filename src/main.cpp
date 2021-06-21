@@ -6,16 +6,18 @@
 
 // Module connection pins (Digital Pins)
 #define PIN_LIGHT_SENSOR PIN_A0
-#define PIN_BUZZER 2
-#define PIN_OLED_CLOCK 3
-#define PIN_OLED_DATA 4
-#define PIN_OLED_CS 5
-#define PIN_OLED_DC 6
-#define PIN_OLED_RESET 7
-#define PIN_SUN 10
-#define PIN_BUTTON_RED 11
-#define PIN_BUTTON_YELLOW 12
-#define PIN_BUTTON_GREEN 13
+#define PIN_BUZZER 6
+#define PIN_SUN 5
+
+#define PIN_OLED_CLOCK 9
+#define PIN_OLED_DATA 10
+#define PIN_OLED_RESET 11
+#define PIN_OLED_DC 12
+#define PIN_OLED_CS 13
+
+#define PIN_BUTTON_RED 4
+#define PIN_BUTTON_YELLOW 2
+#define PIN_BUTTON_GREEN 3
 
 Outputs g_outputs(
     PIN_BUZZER, PIN_SUN
