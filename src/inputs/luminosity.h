@@ -6,7 +6,7 @@ class Luminosity
 {
 private:
     uint8_t _pin;
-    uint8_t _value;
+    int _value;
 
 public:
     Luminosity(uint8_t pin);

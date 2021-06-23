@@ -22,7 +22,7 @@ public:
     unsigned long yellow_long_pressed(unsigned long threshold) const;
     unsigned long green_long_pressed(unsigned long threshold) const;
 
-    uint8_t get_luminosity() const { return _luminosity.get_value(); }
+    int get_luminosity() const { return _luminosity.get_value(); }
     bool is_dark() const { return _luminosity.is_dark(); }
 
     inline unsigned long now_ms() const { return _now_ms; }
