@@ -14,7 +14,6 @@ namespace
     const char red_pressed[] = "Red pressed";
 #endif
     const unsigned int long_press = 1000;
-    const unsigned int alarm_switch_duration = 30000;
 }
 
 Runner::Runner() : _step(NORMAL), _last_change(0), _rtc(nullptr) {}
@@ -232,19 +231,16 @@ void Runner::_process_alarm_set_minute(const Inputs &inputs)
 
 void Runner::_process_alarm_playing(const Inputs &inputs)
 {
-    uint8_t percent = ms_diff(_state.get_alarm_start_time(), _state.now_ms()) * 100 / alarm_switch_duration;
-    _state.set_alarm_percent(percent);
-    if (inputs.red_has_been_pressed() || inputs.yellow_has_been_pressed())
+    if (inputs.red_has_been_pressed())
     {
         _last_change = inputs.now_ms();
-        _state.stop_alarm();
-        CHANGE_STEP(Step::NORMAL, "Red or yellow pressed");
+        _state.switch_off_alarm();
+        CHANGE_STEP(Step::NORMAL, red_pressed);
     }
     else if (inputs.green_has_been_pressed() || inputs.yellow_has_been_pressed())
     {
         _last_change = inputs.now_ms();
         _state.snooze_alarm();
-        CHANGE_STEP(Step::NORMAL, "Red or yellow pressed");
     }
 }
 
@@ -287,10 +283,7 @@ void Runner::_trigger_alarm_if_needed()
     if (!_state.is_alarm_on() || _state.is_alarm_playing())
         return;
     // Alarm is for the future
-    if (_state.get_alarm() != _state.get_current_time())
-        return;
-    // Alarm has already been triggered this minute
-    if (_state.alarm_already_started_this_minute())
+    if (_state.get_current_time() != _state.get_alarm())
         return;
     _state.start_playing_alarm();
     CHANGE_STEP(Step::ALARM_PLAYING, "Alarm triggered");

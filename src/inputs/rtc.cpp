@@ -101,10 +101,10 @@ RtcDateTime Rtc::GetDateTime()
     return _rtc.GetDateTime();
 }
 
-Time Rtc::get_time()
+TimeS Rtc::get_time()
 {
     const RtcDateTime now = GetDateTime();
-    return Time(now.Hour(), now.Minute());
+    return TimeS(now.Hour(), now.Minute(), now.Second());
 }
 
 void Rtc::save_alarm(const Time &time, uint8_t alarm_index)

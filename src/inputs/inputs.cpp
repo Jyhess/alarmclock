@@ -22,7 +22,7 @@ void Inputs::loop()
     _yellow.loop(_now_ms);
     _green.loop(_now_ms);
     _luminosity.loop(_now_ms);
-    if (ms_diff(_last_rtc_read, _now_ms) > 1000)
+    if (ms_diff(_last_rtc_read, _now_ms) > 100)
     {
         _read_rtc();
     }

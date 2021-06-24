@@ -49,7 +49,7 @@ void Oled::loop(const State &state)
 
 void Oled::_draw_normal(const State &state)
 {
-    String time = _make_time_str(state.get_current_time());
+    String time = _make_time_str(state.get_current_time().hm());
     String alarm;
 
     if (state.is_alarm_on())
@@ -128,7 +128,7 @@ void Oled::_draw_item(int x, int y, const String &str, bool selected)
 
 void Oled::_draw_alarm_set(const State &state)
 {
-    const String time = _make_time_str(state.get_current_time());
+    const String time = _make_time_str(state.get_current_time().hm());
 
     char hours[] = "__";
     sprintf(hours, "%2d", state.get_custom_alarm().get_hour());

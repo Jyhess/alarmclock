@@ -4,14 +4,14 @@
 
 #include "step.h"
 #include "utils/time.h"
-#include "utils/updatable.h"
 #include "utils/optional.h"
 #include "utils/array.h"
 #include "utils/range.h"
+#include "alarm_runner.h"
 
 #define PREDEFINED_ALARMS 6
 #define NO_ALARM PREDEFINED_ALARMS
-#define CUSTOM_ALARM PREDEFINED_ALARMS+1
+#define CUSTOM_ALARM PREDEFINED_ALARMS + 1
 
 class State
 {
@@ -20,7 +20,7 @@ private:
     bool _need_oled_update;
 
     uint8_t _display_brightness;
-    Time _time;
+    TimeS _time;
     Optional<Time> _alarm;
     Step _step;
 
@@ -32,9 +32,7 @@ private:
     // Predefined = [0,PREDEFINED_ALARMS[
     uint8_t _alarm_index;
 
-    Optional<unsigned long> _alarm_start_time;
-    Optional<Range<uint8_t, 0, 100>> _alarm_percent;
-    Optional<Time> _last_alarm;
+    Optional<AlarmRunner> _alarm_runner;
 
     Range<int8_t, 0, 100> _sun_percent;
 
@@ -64,8 +62,8 @@ public:
     inline uint8_t get_sun_percent() const { return *_sun_percent; }
     inline void set_sun_percent(uint8_t value) { _sun_percent = value; }
 
-    inline const Time &get_current_time() const { return _time; }
-    inline void set_current_time(const Time &value)
+    inline const TimeS &get_current_time() const { return _time; }
+    inline void set_current_time(const TimeS &value)
     {
         _time = value;
         _need_oled_update = true;
@@ -78,7 +76,11 @@ public:
         _alarm = value;
         _need_oled_update = true;
     }
-    inline void switch_off_alarm() { _alarm = Optional<Time>(); }
+    inline void switch_off_alarm()
+    {
+        _alarm.reset();
+        _alarm_runner.reset();
+    }
 
     inline const Time &get_custom_alarm() const { return _custom_alarm; }
     inline void set_custom_alarm(const Time &value)
@@ -96,31 +98,9 @@ public:
         _need_oled_update = true;
     }
 
-    inline bool is_alarm_playing() const { return _alarm_start_time.has_value(); }
-    inline uint8_t get_alarm_percent() const { return _alarm_percent->value(); }
-    inline void set_alarm_percent(uint8_t percent) { _alarm_percent = percent; }
+    inline bool is_alarm_playing() const { return _alarm_runner.has_value(); }
+    inline uint8_t get_alarm_percent() const { return _alarm_runner->get_alarm_percent(_time); }
 
-    inline unsigned long get_alarm_start_time() const { return *_alarm_start_time; }
-    inline void start_playing_alarm()
-    {
-        _alarm_start_time = _now_ms;
-        _last_alarm = _time;
-        _need_oled_update = true;
-        set_alarm_percent(0);
-        // TODO: Where to reset this _last_alarm
-    }
-    inline void stop_alarm()
-    {
-        _alarm_start_time.reset();
-        _alarm_percent.reset();
-        _need_oled_update = true;
-    }
-    inline void snooze_alarm()
-    { // TODO
-    }
-
-    inline bool alarm_already_started_this_minute() const
-    {
-        return _last_alarm.has_value() && _last_alarm.value() == get_current_time();
-    }
+    inline void start_playing_alarm() { _alarm_runner = AlarmRunner(_time); }
+    inline void snooze_alarm() { _alarm_runner->snooze_alarm(_time); }
 };

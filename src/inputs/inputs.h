@@ -27,7 +27,7 @@ public:
 
     inline unsigned long now_ms() const { return _now_ms; }
 
-    inline const Time &get_time() const { return _time; }
+    inline const TimeS &get_time() const { return _time; }
 
 private:
     unsigned long _now_ms;
@@ -39,7 +39,7 @@ private:
 
     Rtc _rtc;
     unsigned long _last_rtc_read;
-    Time _time;
+    TimeS _time;
 
     void _read_rtc();
 };

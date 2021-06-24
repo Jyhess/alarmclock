@@ -4,7 +4,7 @@
 
 namespace
 {
-    const uint8_t dark_limit = 15;
+    const uint8_t dark_limit = 5;
 }
 
 Luminosity::Luminosity(uint8_t pin) : _pin(pin), _value(128)
