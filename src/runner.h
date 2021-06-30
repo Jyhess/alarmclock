@@ -10,17 +10,14 @@
 class Runner
 {
 public:
-    Runner();
+    Runner(State & state);
     void setup(Inputs &inputs);
     void loop(const Inputs &inputs);
 
-    inline const State &state() const { return _state; }
-
 private:
-    State _state;
+    State & _state;
     Step _step;
     unsigned long _last_change;
-    Rtc *_rtc;
 
     void _process_normal(const Inputs &inputs);
     void _process_alarm_select(const Inputs &inputs);

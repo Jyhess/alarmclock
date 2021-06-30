@@ -1,13 +1,7 @@
 #include "state.h"
 
-State::State() : _now_ms(0), _need_oled_update(false), _display_brightness(0), _step(NORMAL), _alarm_index(NO_ALARM)
+State::State(AlarmList &alarm_list) : _now_ms(0), _need_oled_update(false), _display_brightness(0), _step(NORMAL), _alarm_list(alarm_list)
 {
-    _alarms[0] = Time(6, 30);
-    _alarms[1] = Time(7, 0);
-    _alarms[2] = Time(7, 30);
-    _alarms[3] = Time(8, 0);
-    _alarms[4] = Time(8, 30);
-    _alarms[5] = Time(9, 0);
 }
 
 bool State::is_updated() const

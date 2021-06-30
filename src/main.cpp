@@ -27,7 +27,9 @@ Outputs g_outputs(
 #endif
 );
 Inputs g_inputs(PIN_BUTTON_RED, PIN_BUTTON_YELLOW, PIN_BUTTON_GREEN, PIN_LIGHT_SENSOR);
-Runner g_runner;
+AlarmList g_alarm_list(g_inputs.rtc());
+State g_state(g_alarm_list);
+Runner g_runner(g_state);
 
 void setup()
 {
@@ -35,6 +37,8 @@ void setup()
   //Serial.println("Running setup...");
   g_outputs.setup();
   g_inputs.setup();
+  g_alarm_list.setup();
+  g_state.setup();
   g_runner.setup(g_inputs);
   //Serial.println("Setup done");
 }
@@ -43,5 +47,5 @@ void loop()
 {
   g_inputs.loop();
   g_runner.loop(g_inputs);
-  g_outputs.loop(g_runner.state());
+  g_outputs.loop(g_state);
 }

@@ -78,11 +78,11 @@ void Oled::_draw_normal(const State &state)
 
 void Oled::_draw_alarm_select(const State &state)
 {
-    const String alarm = _make_time_str(state.get_custom_alarm());
+    const String alarm = _make_time_str(state.get_alarms().get_custom_alarm());
     Array<String, PREDEFINED_ALARMS> alarms;
     for (uint8_t i = 0; i < PREDEFINED_ALARMS; ++i)
     {
-        alarms[i] = _make_time_str(state.get_predefine_alarm(i));
+        alarms[i] = _make_time_str(state.get_alarms().get_alarm(i));
     }
     const u8g2_uint_t width = _u8g.getDisplayWidth();
     const u8g2_uint_t x_1 = 1 * width / 6;
@@ -93,7 +93,7 @@ void Oled::_draw_alarm_select(const State &state)
     const u8g2_uint_t y_2 = 3 * height / 6;
     const u8g2_uint_t y_3 = 5 * height / 6;
 
-    const uint8_t id = state.get_alarm_index();
+    const uint8_t id = state.get_alarms().get_alarm_index();
     _u8g.firstPage();
     do
     {
@@ -131,9 +131,9 @@ void Oled::_draw_alarm_set(const State &state)
     const String time = _make_time_str(state.get_current_time().hm());
 
     char hours[] = "__";
-    sprintf(hours, "%2d", state.get_custom_alarm().get_hour());
+    sprintf(hours, "%2d", state.get_alarms().get_custom_alarm().get_hour());
     char minutes[] = "__";
-    sprintf(minutes, "%02d", state.get_custom_alarm().get_minute());
+    sprintf(minutes, "%02d", state.get_alarms().get_custom_alarm().get_minute());
 
     const uint8_t *font_hour = font_big;
     const uint8_t *font_minute = font_big_select;

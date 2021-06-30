@@ -7,11 +7,8 @@
 #include "utils/optional.h"
 #include "utils/array.h"
 #include "utils/range.h"
+#include "alarm_list.h"
 #include "alarm_runner.h"
-
-#define PREDEFINED_ALARMS 6
-#define NO_ALARM PREDEFINED_ALARMS
-#define CUSTOM_ALARM PREDEFINED_ALARMS + 1
 
 class State
 {
@@ -24,20 +21,15 @@ private:
     Optional<Time> _alarm;
     Step _step;
 
-    Time _custom_alarm;
-    typedef Array<Time, PREDEFINED_ALARMS> Alarms;
-    Alarms _alarms;
-    // Off = 6
-    // Custom = 7
-    // Predefined = [0,PREDEFINED_ALARMS[
-    uint8_t _alarm_index;
-
+    AlarmList &_alarm_list;
     Optional<AlarmRunner> _alarm_runner;
 
     Range<int8_t, 0, 100> _sun_percent;
 
 public:
-    State();
+    State(AlarmList &_alarm_list);
+
+    inline void setup() {}
 
     bool is_updated() const;
     void clear_updated();
@@ -82,21 +74,8 @@ public:
         _alarm_runner.reset();
     }
 
-    inline const Time &get_custom_alarm() const { return _custom_alarm; }
-    inline void set_custom_alarm(const Time &value)
-    {
-        _custom_alarm = value;
-        _need_oled_update = true;
-    }
-
-    const Alarms &get_predefine_alarms() const { return _alarms; }
-    inline const Time &get_predefine_alarm(uint8_t alarm_index) const { return _alarms[alarm_index]; }
-    inline uint8_t get_alarm_index() const { return _alarm_index; }
-    inline void set_alarm_index(uint8_t value)
-    {
-        _alarm_index = value;
-        _need_oled_update = true;
-    }
+    inline const AlarmList &get_alarms() const { return _alarm_list; }
+    inline AlarmList &alarms() { return _alarm_list; }
 
     inline bool is_alarm_playing() const { return _alarm_runner.has_value(); }
     inline uint8_t get_alarm_percent() const { return _alarm_runner->get_alarm_percent(_time); }
