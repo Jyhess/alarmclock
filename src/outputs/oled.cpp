@@ -50,28 +50,29 @@ void Oled::loop(const State &state)
 
 void Oled::_draw_normal(const State &state)
 {
-    String time = _make_time_str(state.get_current_time().hm());
-    String alarm;
+    char time[6];
+    _make_time_cstr(time, state.get_current_time().hm());
+    char alarm[12] = "";
 
     if (state.is_alarm_on())
     {
-        alarm = _make_time_str(state.get_alarm());
+        _make_time_cstr(alarm, state.get_alarm());
     }
     if (state.is_alarm_playing())
     {
-        alarm = alarm + String(" ") + String(state.get_alarm_percent()) + String(" /");
+        snprintf_P(alarm + 5, 6, PSTR(" /%d/"), state.get_alarm_percent());
     }
     _u8g.display();
     _u8g.setContrast(state.get_display_brightness());
     const u8g2_uint_t alarm_x = _u8g.getDisplayWidth() / 2;
     _u8g.setFont(font_big);
-    const u8g2_uint_t x = (_u8g.getDisplayWidth() - _u8g.getStrWidth(time.c_str())) / 2;
+    const u8g2_uint_t x = (_u8g.getDisplayWidth() - _u8g.getStrWidth(time)) / 2;
 
     _u8g.firstPage();
     do
     {
         _u8g.setFont(font_big);
-        _u8g.drawStr(x, time_y, time.c_str());
+        _u8g.drawStr(x, time_y, time);
         _u8g.setFont(font_medium);
         _draw_item(alarm_x, alarm_y, alarm, false);
     } while (_u8g.nextPage());
@@ -79,11 +80,12 @@ void Oled::_draw_normal(const State &state)
 
 void Oled::_draw_alarm_select(const State &state)
 {
-    const String alarm = _make_time_str(state.get_alarms().get_custom_alarm());
-    Array<String, PREDEFINED_ALARMS> alarms;
+    char alarm[6];
+    _make_time_cstr(alarm, state.get_alarms().get_custom_alarm());
+    char alarms[PREDEFINED_ALARMS][6];
     for (uint8_t i = 0; i < PREDEFINED_ALARMS; ++i)
     {
-        alarms[i] = _make_time_str(state.get_alarms().get_alarm(i));
+        _make_time_cstr(alarms[i], state.get_alarms().get_alarm(i));
     }
     const u8g2_uint_t width = _u8g.getDisplayWidth();
     const u8g2_uint_t x_1 = 1 * width / 6;
@@ -101,7 +103,7 @@ void Oled::_draw_alarm_select(const State &state)
     {
         _u8g.setFont(font_small);
         _draw_item(x_1, y_1, "OFF", id == NO_ALARM);
-        _draw_item(x_3, y_1, alarm, id == CUSTOM_ALARM);
+        _draw_item(x_3, y_1, "NEW", id == NEW_ALARM);
         _draw_item(x_1, y_2, alarms[0], id == 0);
         _draw_item(x_2, y_2, alarms[1], id == 1);
         _draw_item(x_3, y_2, alarms[2], id == 2);
@@ -111,10 +113,10 @@ void Oled::_draw_alarm_select(const State &state)
     } while (_u8g.nextPage());
 }
 
-void Oled::_draw_item(int x, int y, const String &str, bool contrast)
+void Oled::_draw_item(int x, int y, const char * str, bool contrast)
 {
     const u8g2_uint_t height = small_font_height;
-    const u8g2_uint_t width = _u8g.getStrWidth(str.c_str());
+    const u8g2_uint_t width = _u8g.getStrWidth(str);
     x -= width / 2;
     y += height / 2;
     if (contrast)
@@ -122,7 +124,7 @@ void Oled::_draw_item(int x, int y, const String &str, bool contrast)
         _u8g.drawBox(x-2, y-height-2, width+4, height+4);
         _u8g.setDrawColor(0);
     }
-    _u8g.drawStr(x, y, str.c_str());
+    _u8g.drawStr(x, y, str);
     if (contrast)
     {
         _u8g.setDrawColor(1);
@@ -131,7 +133,8 @@ void Oled::_draw_item(int x, int y, const String &str, bool contrast)
 
 void Oled::_draw_alarm_set(const State &state)
 {
-    const String time = _make_time_str(state.get_current_time().hm());
+    char time[6];
+    _make_time_cstr(time, state.get_current_time().hm());
 
     char hours[] = "__";
     sprintf(hours, "%d", state.get_alarms().get_custom_alarm().get_hour());
@@ -179,9 +182,7 @@ void Oled::_draw_alarm_set(const State &state)
     } while (_u8g.nextPage());
 }
 
-String Oled::_make_time_str(const Time &time) const
+void Oled::_make_time_cstr(char * data, const Time &time)
 {
-    String data("__:__");
-    snprintf_P(data.begin(), data.length() + 1, PSTR("%d:%02d"), time.get_hour(), time.get_minute());
-    return data;
+    snprintf_P(data, 6, PSTR("%d:%02d"), time.get_hour(), time.get_minute());
 }

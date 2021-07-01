@@ -2,7 +2,6 @@
 
 #include "U8g2lib.h"
 #include "utils/time.h"
-#include "WString.h"
 #include "state.h"
 
 class Oled
@@ -25,6 +24,6 @@ private:
     void _draw_normal(const State &state);
     void _draw_alarm_select(const State &state);
     void _draw_alarm_set(const State &state);
-    void _draw_item(int x, int y, const String &str, bool selected);
-    String _make_time_str(const Time &time) const;
+    void _draw_item(int x, int y, const char* str, bool selected);
+    static void _make_time_cstr(char * data, const Time &time);
 };
