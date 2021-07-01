@@ -17,8 +17,8 @@ public:
     RtcDateTime GetDateTime();
     TimeS get_time();
 
-    void save_alarm(const Time &time, uint8_t alarm_index);
-    void read_alarm(Time &time, uint8_t &alarm_index);
+    void save_alarm(const Time &alarm1, const Time &alarm2, const Time &alarm3, uint8_t alarm_index);
+    void read_alarm(Time &alarm1, Time &alarm2, Time &alarm3, uint8_t &alarm_index);
 #ifdef DEBUG_RTC
     void printDateTime(const RtcDateTime &dt) const;
 #endif

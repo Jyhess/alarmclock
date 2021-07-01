@@ -107,17 +107,22 @@ TimeS Rtc::get_time()
     return TimeS(now.Hour(), now.Minute(), now.Second());
 }
 
-void Rtc::save_alarm(const Time &time, uint8_t alarm_index)
+void Rtc::save_alarm(const Time &alarm1, const Time &alarm2, const Time &alarm3, uint8_t alarm_index)
 {
-    DS3231AlarmOne alarm(0, time.get_hour(), time.get_minute(), alarm_index, DS3231AlarmOneControl::DS3231AlarmOneControl_HoursMinutesSecondsMatch);
-    _rtc.SetAlarmOne(alarm);
+    DS3231AlarmOne alarm_one(alarm1.get_hour(), alarm1.get_minute(), alarm2.get_hour(), alarm2.get_minute(), DS3231AlarmOneControl::DS3231AlarmOneControl_HoursMinutesSecondsMatch);
+    DS3231AlarmTwo alarm_two(alarm3.get_hour(), alarm3.get_minute(), alarm_index, DS3231AlarmTwoControl::DS3231AlarmTwoControl_HoursMinutesMatch);
+    _rtc.SetAlarmOne(alarm_one);
+    _rtc.SetAlarmTwo(alarm_two);
 }
 
-void Rtc::read_alarm(Time &time, uint8_t &alarm_index)
+void Rtc::read_alarm(Time &alarm1, Time &alarm2, Time &alarm3, uint8_t &alarm_index)
 {
-    auto dt = _rtc.GetAlarmOne();
-    time = Time(dt.Hour(), dt.Minute());
-    alarm_index = dt.Second();
+    auto alarm_one = _rtc.GetAlarmOne();
+    alarm1 = Time(alarm_one.DayOf(), alarm_one.Hour());
+    alarm2 = Time(alarm_one.Minute(), alarm_one.Second());
+    auto alarm_two = _rtc.GetAlarmTwo();
+    alarm3 = Time(alarm_two.DayOf(), alarm_two.Hour());
+    alarm_index = alarm_two.Minute();
 }
 
 #ifdef DEBUG_RTC

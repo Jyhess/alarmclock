@@ -82,8 +82,8 @@ void Oled::_draw_alarm_select(const State &state)
 {
     char alarm[6];
     _make_time_cstr(alarm, state.get_alarms().get_custom_alarm());
-    char alarms[PREDEFINED_ALARMS][6];
-    for (uint8_t i = 0; i < PREDEFINED_ALARMS; ++i)
+    char alarms[SAVED_ALARMS][6];
+    for (uint8_t i = 0; i < SAVED_ALARMS; ++i)
     {
         _make_time_cstr(alarms[i], state.get_alarms().get_alarm(i));
     }

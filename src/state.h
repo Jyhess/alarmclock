@@ -5,7 +5,6 @@
 #include "step.h"
 #include "utils/time.h"
 #include "utils/optional.h"
-#include "utils/array.h"
 #include "utils/range.h"
 #include "alarm_list.h"
 #include "alarm_runner.h"
@@ -66,12 +65,15 @@ public:
     inline void set_alarm(const Time &value)
     {
         _alarm = value;
+        _alarm_list.save_alarm(value);
         _need_oled_update = true;
     }
     inline void switch_off_alarm()
     {
         _alarm.reset();
         _alarm_runner.reset();
+        _alarm_list.save_no_alarm();
+        _need_oled_update = true;
     }
 
     inline const AlarmList &get_alarms() const { return _alarm_list; }

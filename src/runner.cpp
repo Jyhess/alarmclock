@@ -25,11 +25,11 @@ void Runner::setup(Inputs &inputs)
     {
         _state.switch_off_alarm();
     }
-    else if (alarm_index == CUSTOM_ALARM)
+    else if (alarm_index == NEW_ALARM)
     {
         _state.set_alarm(_state.get_alarms().get_custom_alarm());
     }
-    else if (alarm_index < PREDEFINED_ALARMS)
+    else if (alarm_index < SAVED_ALARMS)
     {
         _state.set_alarm(_state.get_alarms().get_alarm(alarm_index));
     }
@@ -129,17 +129,15 @@ void Runner::_process_alarm_select(const Inputs &inputs)
         if (alarm_index == NO_ALARM)
         {
             _state.switch_off_alarm();
-            _state.alarms().set_alarm_index(alarm_index);
             CHANGE_STEP(Step::NORMAL, red_pressed);
         }
-        else if (alarm_index == CUSTOM_ALARM)
+        else if (alarm_index == NEW_ALARM)
         {
             CHANGE_STEP(Step::ALARM_SET_HOUR, red_pressed);
         }
         else
         {
             _state.set_alarm(_state.get_alarms().get_alarm(alarm_index));
-            _state.alarms().set_alarm_index(alarm_index);
             CHANGE_STEP(Step::NORMAL, red_pressed);
         }
     }
@@ -148,13 +146,13 @@ void Runner::_process_alarm_select(const Inputs &inputs)
         if (inputs.yellow_has_been_pressed())
         {
             if (alarm_index == 0)
-                alarm_index = CUSTOM_ALARM;
+                alarm_index = NEW_ALARM;
             else
                 alarm_index--;
         }
         else if (inputs.green_has_been_pressed())
         {
-            if (alarm_index == CUSTOM_ALARM)
+            if (alarm_index == NEW_ALARM)
                 alarm_index = 0;
             else
                 alarm_index++;
@@ -172,22 +170,12 @@ void Runner::_process_alarm_set_hour(const Inputs &inputs)
     {
         CHANGE_STEP(Step::ALARM_SET_MINUTE, red_pressed);
     }
-    else if (inputs.yellow_has_been_pressed())
+    else if (inputs.yellow_has_been_pressed() || inputs.yellow_long_pressed(long_press))
     {
         Time alarm = alarms.get_custom_alarm();
         alarms.set_custom_alarm(alarm.add_hour(-1));
     }
-    else if (inputs.green_has_been_pressed())
-    {
-        Time alarm = alarms.get_custom_alarm();
-        alarms.set_custom_alarm(alarm.add_hour(1));
-    }
-    else if (inputs.yellow_long_pressed(long_press))
-    {
-        Time alarm = alarms.get_custom_alarm();
-        alarms.set_custom_alarm(alarm.add_hour(-1));
-    }
-    else if (inputs.green_long_pressed(long_press))
+    else if (inputs.green_has_been_pressed() || inputs.green_long_pressed(long_press))
     {
         Time alarm = alarms.get_custom_alarm();
         alarms.set_custom_alarm(alarm.add_hour(1));
@@ -200,26 +188,15 @@ void Runner::_process_alarm_set_minute(const Inputs &inputs)
     if (inputs.red_has_been_pressed())
     {
         _state.set_alarm(alarms.get_custom_alarm());
-        alarms.set_custom_alarm(alarms.get_custom_alarm());
         CHANGE_STEP(Step::NORMAL, red_pressed);
         _last_change = inputs.now_ms();
     }
-    else if (inputs.yellow_has_been_pressed())
+    else if (inputs.yellow_has_been_pressed() || inputs.yellow_long_pressed(long_press))
     {
         Time alarm = alarms.get_custom_alarm();
         alarms.set_custom_alarm(alarm.add_minute(-1));
     }
-    else if (inputs.green_has_been_pressed())
-    {
-        Time alarm = alarms.get_custom_alarm();
-        alarms.set_custom_alarm(alarm.add_minute(1));
-    }
-    else if (inputs.yellow_long_pressed(long_press))
-    {
-        Time alarm = alarms.get_custom_alarm();
-        alarms.set_custom_alarm(alarm.add_minute(-1));
-    }
-    else if (inputs.green_long_pressed(long_press))
+    else if (inputs.green_has_been_pressed() || inputs.green_long_pressed(long_press))
     {
         Time alarm = alarms.get_custom_alarm();
         alarms.set_custom_alarm(alarm.add_minute(1));

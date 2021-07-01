@@ -3,7 +3,6 @@
 #include "step.h"
 #include "state.h"
 #include "inputs/inputs.h"
-#include "state.h"
 
 //#define DEBUG_STEP
 
