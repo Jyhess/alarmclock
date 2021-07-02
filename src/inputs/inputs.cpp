@@ -1,7 +1,8 @@
 #include "inputs/inputs.h"
 #include "utils/ms_diff.h"
 
-Inputs::Inputs(uint8_t red_pin, uint8_t yellow_pin, uint8_t green_pin, uint8_t luminosity_pin) : _now_ms(0), _red(red_pin), _yellow(yellow_pin), _green(green_pin), _luminosity(luminosity_pin), _last_rtc_read(0)
+Inputs::Inputs(uint8_t red_pin, uint8_t yellow_pin, uint8_t green_pin, uint8_t luminosity_pin, uint8_t vibration_pin)
+ : _now_ms(0), _red(red_pin), _yellow(yellow_pin), _green(green_pin), _luminosity(luminosity_pin), _vibration(vibration_pin), _last_rtc_read(0)
 {
 }
 
@@ -12,6 +13,7 @@ void Inputs::setup()
     _green.setup();
     _yellow.setup();
     _luminosity.setup();
+    _vibration.setup();
     _read_rtc();
 }
 
@@ -22,6 +24,7 @@ void Inputs::loop()
     _yellow.loop(_now_ms);
     _green.loop(_now_ms);
     _luminosity.loop(_now_ms);
+    _vibration.loop(_now_ms);
     if (ms_diff(_last_rtc_read, _now_ms) > 100)
     {
         _read_rtc();

@@ -24,6 +24,7 @@ private:
     Optional<AlarmRunner> _alarm_runner;
 
     Range<int8_t, 0, 100> _sun_percent;
+    Optional<int16_t> _debug_value;
 
 public:
     State(AlarmList &_alarm_list);
@@ -32,6 +33,17 @@ public:
 
     bool is_updated() const;
     void clear_updated();
+
+    inline Optional<int16_t> get_debug_value() const { return _debug_value; }
+    inline void set_debug_value(int16_t value)
+    {
+        if( value != *_debug_value )
+        {
+            _debug_value = value;
+            _need_oled_update = true;
+        }
+    }
+
 
     inline unsigned long now_ms() const { return _now_ms; }
     inline void set_now_ms(long value) { _now_ms = value; }
@@ -46,8 +58,11 @@ public:
     inline uint8_t get_display_brightness() const { return _display_brightness; }
     inline void set_display_brightness(uint8_t value)
     {
-        _display_brightness = value;
-        _need_oled_update = true;
+        if( value != _display_brightness )
+        {
+            _display_brightness = value;
+            _need_oled_update = true;
+        }
     }
 
     inline uint8_t get_sun_percent() const { return *_sun_percent; }

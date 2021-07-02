@@ -47,6 +47,7 @@ void Runner::loop(const Inputs &inputs)
         _last_change = inputs.now_ms();
     _state.set_now_ms(inputs.now_ms());
     _state.set_current_time(inputs.get_time());
+    //_state.set_debug_value(inputs.get_luminosity());
     _trigger_alarm_if_needed();
     switch (_step)
     {
@@ -101,6 +102,10 @@ void Runner::_process_normal(const Inputs &inputs)
     {
         _last_change = inputs.now_ms();
         _state.set_sun_percent(_state.get_sun_percent() + 1);
+    }
+    else if(inputs.has_moved())
+    {
+        _last_change = inputs.now_ms();
     }
     else if (inputs.is_dark())
     {
@@ -220,7 +225,7 @@ void Runner::_process_alarm_playing(const Inputs &inputs)
 
 void Runner::_process_off(const Inputs &inputs)
 {
-    if (inputs.red_has_been_pressed() || inputs.yellow_has_been_pressed() || inputs.green_has_been_pressed())
+    if (inputs.red_has_been_pressed() || inputs.yellow_has_been_pressed() || inputs.green_has_been_pressed() )
     {
         _last_change = inputs.now_ms();
         CHANGE_STEP(Step::NORMAL, "Button pressed");
@@ -229,6 +234,11 @@ void Runner::_process_off(const Inputs &inputs)
     {
         _last_change = inputs.now_ms();
         CHANGE_STEP(Step::NORMAL, "Light detected");
+    }
+    else if (inputs.has_moved())
+    {
+        _last_change = inputs.now_ms();
+        CHANGE_STEP(Step::NORMAL, "Vibration detected");
     }
 }
 

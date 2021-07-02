@@ -18,6 +18,7 @@
 #define PIN_BUTTON_RED 4
 #define PIN_BUTTON_YELLOW 2
 #define PIN_BUTTON_GREEN 3
+#define PIN_VIBRATION PIN_A1
 
 Outputs g_outputs(
     PIN_BUZZER, PIN_SUN
@@ -26,7 +27,7 @@ Outputs g_outputs(
     PIN_OLED_CLOCK, PIN_OLED_DATA, PIN_OLED_CS, PIN_OLED_DC, PIN_OLED_RESET
 #endif
 );
-Inputs g_inputs(PIN_BUTTON_RED, PIN_BUTTON_YELLOW, PIN_BUTTON_GREEN, PIN_LIGHT_SENSOR);
+Inputs g_inputs(PIN_BUTTON_RED, PIN_BUTTON_YELLOW, PIN_BUTTON_GREEN, PIN_LIGHT_SENSOR, PIN_VIBRATION);
 AlarmList g_alarm_list(g_inputs.rtc());
 State g_state(g_alarm_list);
 Runner g_runner(g_state);

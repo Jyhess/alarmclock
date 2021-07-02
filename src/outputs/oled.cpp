@@ -52,29 +52,42 @@ void Oled::_draw_normal(const State &state)
 {
     char time[6];
     _make_time_cstr(time, state.get_current_time().hm());
-    char alarm[12] = "";
 
+    char alarm[6] = "";
     if (state.is_alarm_on())
     {
         _make_time_cstr(alarm, state.get_alarm());
     }
+
+    char debug_str[6] = "";
+    if( state.get_debug_value().has_value() )
+    {
+        snprintf_P(debug_str, 6, PSTR("%d"), state.get_debug_value().value());
+    }
+
+    char alarm_percent[6] = "";
     if (state.is_alarm_playing())
     {
-        snprintf_P(alarm + 5, 6, PSTR(" /%d/"), state.get_alarm_percent());
+        snprintf_P(alarm_percent, 6, PSTR("%d"), state.get_alarm_percent());
     }
     _u8g.display();
     _u8g.setContrast(state.get_display_brightness());
-    const u8g2_uint_t alarm_x = _u8g.getDisplayWidth() / 2;
     _u8g.setFont(font_big);
-    const u8g2_uint_t x = (_u8g.getDisplayWidth() - _u8g.getStrWidth(time)) / 2;
+    const u8g2_uint_t width = _u8g.getDisplayWidth();
+    const u8g2_uint_t time_x = (width - _u8g.getStrWidth(time)) / 2;
+    const u8g2_uint_t x_1 = 1 * width / 6;
+    const u8g2_uint_t x_2 = 3 * width / 6;
+    const u8g2_uint_t x_3 = 5 * width / 6;
 
     _u8g.firstPage();
     do
     {
         _u8g.setFont(font_big);
-        _u8g.drawStr(x, time_y, time);
+        _u8g.drawStr(time_x, time_y, time);
         _u8g.setFont(font_medium);
-        _draw_item(alarm_x, alarm_y, alarm, false);
+        _draw_item(x_1, alarm_y, debug_str, false);
+        _draw_item(x_2, alarm_y, alarm, false);
+        _draw_item(x_3, alarm_y, alarm_percent, false);
     } while (_u8g.nextPage());
 }
 
