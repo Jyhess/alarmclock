@@ -23,7 +23,7 @@ private:
     AlarmList &_alarm_list;
     Optional<AlarmRunner> _alarm_runner;
 
-    Range<int8_t, 0, 100> _sun_percent;
+    Range<int16_t, 0, 255> _sun_value;
     Optional<int16_t> _debug_value;
 
 public:
@@ -65,8 +65,8 @@ public:
         }
     }
 
-    inline uint8_t get_sun_percent() const { return *_sun_percent; }
-    inline void set_sun_percent(uint8_t value) { _sun_percent = value; }
+    inline int16_t get_sun_value() const { return *_sun_value; }
+    inline void set_sun_value(int16_t value) { _sun_value = value; }
 
     inline const TimeS &get_current_time() const { return _time; }
     inline void set_current_time(const TimeS &value)
@@ -95,7 +95,7 @@ public:
     inline AlarmList &alarms() { return _alarm_list; }
 
     inline bool is_alarm_playing() const { return _alarm_runner.has_value(); }
-    inline uint8_t get_alarm_percent() const { return _alarm_runner->get_alarm_percent(_time); }
+    inline uint8_t get_alarm_value() const { return _alarm_runner->get_alarm_value(_time); }
 
     inline void start_playing_alarm() { _alarm_runner = AlarmRunner(_time); }
     inline void snooze_alarm() { _alarm_runner->snooze_alarm(_time); }

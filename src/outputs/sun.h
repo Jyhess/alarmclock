@@ -5,9 +5,9 @@ class Sun
 {
 private:
     uint8_t _pin;
-    int8_t _start;
-    int8_t _target;
-    int8_t _last;
+    uint8_t _start;
+    uint8_t _target;
+    uint8_t _last;
     unsigned long _start_time;
 
 public:

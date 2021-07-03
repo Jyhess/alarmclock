@@ -68,7 +68,7 @@ void Oled::_draw_normal(const State &state)
     char alarm_percent[6] = "";
     if (state.is_alarm_playing())
     {
-        snprintf_P(alarm_percent, 6, PSTR("%d"), state.get_alarm_percent());
+        snprintf_P(alarm_percent, 6, PSTR("%d"), state.get_alarm_value());
     }
     _u8g.display();
     _u8g.setContrast(state.get_display_brightness());

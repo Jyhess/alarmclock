@@ -17,7 +17,7 @@ void AlarmRunner::snooze_alarm(const TimeS &current_time)
     if( is_snooze_alarm(current_time) )
         return;
     // Fix percent at half of previous value for snooze duration
-    _snooze_percent = get_alarm_percent(current_time) / 2;
+    _snooze_value = get_alarm_value(current_time) / 2;
     _snooze_time = current_time + TimeS().add_hms(0, 0, snooze_duration_s);
     // Change start time to restart increasing from half value
     //auto seconds_elapsed = (current_time - _alarm_start_time).to_seconds();
@@ -29,15 +29,15 @@ void AlarmRunner::snooze_alarm(const TimeS &current_time)
     Serial.printf(" _alarm_start_time=%d", _alarm_start_time.get_hour());
     Serial.printf(":%d", _alarm_start_time.get_minute());
     Serial.printf(":%d", _alarm_start_time.get_second());
-    Serial.printf(" _snooze_percent=%d", _snooze_percent);
+    Serial.printf(" _snooze_value=%d", _snooze_value);
     Serial.println("");
 #endif
 }
 
-uint8_t AlarmRunner::get_alarm_percent(const TimeS &current_time) const
+uint8_t AlarmRunner::get_alarm_value(const TimeS &current_time) const
 {
     if (is_snooze_alarm(current_time))
-        return _snooze_percent;
+        return _snooze_value;
     auto seconds_elapsed = (current_time - _alarm_start_time).to_seconds();
 #ifdef DEBUG_ALARM
     Serial.printf("current_time=%d", current_time.get_hour());
@@ -48,12 +48,12 @@ uint8_t AlarmRunner::get_alarm_percent(const TimeS &current_time) const
     Serial.printf(":%d", _alarm_start_time.get_second());
     Serial.printf(" seconds_elapsed=%d", seconds_elapsed);
 #endif
-    uint8_t percent = 100;
+    uint8_t value = 255;
     if (seconds_elapsed < alarm_switch_duration_s)
-        percent = seconds_elapsed * 100 / alarm_switch_duration_s;
+        value = seconds_elapsed * 255 / alarm_switch_duration_s;
 #ifdef DEBUG_ALARM
-    Serial.printf(" percent=%d", percent);
+    Serial.printf(" value=%d", value);
     Serial.println("");
 #endif
-    return percent;
+    return value;
 }

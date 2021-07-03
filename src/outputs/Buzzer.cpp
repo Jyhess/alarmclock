@@ -50,13 +50,13 @@ void Buzzer::setup()
 
 void Buzzer::loop(const State &state)
 {
-    if (_is_playing && (!state.is_alarm_playing() || state.get_alarm_percent() < 100))
+    if (_is_playing && (!state.is_alarm_playing() || state.get_alarm_value() < 255))
     {
         _is_playing = false;
         noTone(_pin);
         //Serial.println("Buzzer stopped");
     }
-    else if (!_is_playing && state.is_alarm_playing() && state.get_alarm_percent() >= 100)
+    else if (!_is_playing && state.is_alarm_playing() && state.get_alarm_value() >= 255)
     {
         _is_playing = true;
         _note = 0;

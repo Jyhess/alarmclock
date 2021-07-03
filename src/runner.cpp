@@ -86,22 +86,22 @@ void Runner::_process_normal(const Inputs &inputs)
     else if (inputs.yellow_has_been_pressed())
     {
         _last_change = inputs.now_ms();
-        _state.set_sun_percent(0);
+        _state.set_sun_value(0);
     }
     else if (inputs.green_has_been_pressed())
     {
         _last_change = inputs.now_ms();
-        _state.set_sun_percent(_state.get_sun_percent() + 10);
+        _state.set_sun_value(_state.get_sun_value() + 10);
     }
     else if (inputs.yellow_long_pressed(100))
     {
         _last_change = inputs.now_ms();
-        _state.set_sun_percent(_state.get_sun_percent() - 1);
+        _state.set_sun_value(_state.get_sun_value() - 1);
     }
     else if (inputs.green_long_pressed(100))
     {
         _last_change = inputs.now_ms();
-        _state.set_sun_percent(_state.get_sun_percent() + 1);
+        _state.set_sun_value(_state.get_sun_value() + 1);
     }
     else if(inputs.has_moved())
     {
@@ -109,7 +109,7 @@ void Runner::_process_normal(const Inputs &inputs)
     }
     else if (inputs.is_dark())
     {
-        if (!_state.is_alarm_playing() && _state.get_sun_percent() == 0 && ms_diff(_last_change, inputs.now_ms()) > off_threshold)
+        if (!_state.is_alarm_playing() && _state.get_sun_value() == 0 && ms_diff(_last_change, inputs.now_ms()) > off_threshold)
         {
             CHANGE_STEP(Step::NO_DISPLAY, "No actions in dark");
         }
