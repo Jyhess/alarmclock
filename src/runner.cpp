@@ -13,7 +13,7 @@ namespace
 #ifdef DEBUG_STEP
     const char red_pressed[] = "Red pressed";
 #endif
-    const unsigned int long_press = 1000;
+    const unsigned int long_press = 500;
     const unsigned int set_time_long_press = 3000;
 }
 
@@ -41,7 +41,7 @@ void Runner::setup(Inputs &inputs)
     }
 }
 
-void Runner::loop(const Inputs &inputs)
+void Runner::loop(const Inputs &inputs, const Outputs & outputs)
 {
     _state.clear_updated();
     if (_last_change == 0)
@@ -78,7 +78,7 @@ void Runner::loop(const Inputs &inputs)
     }
 }
 
-void Runner::_process_normal(const Inputs &inputs)
+void Runner::_process_normal(const Inputs &inputs, const Outputs & outputs)
 {
     if (inputs.red_has_been_pressed(set_time_long_press))
     {
@@ -94,25 +94,25 @@ void Runner::_process_normal(const Inputs &inputs)
         _state.start_playing_alarm();
         CHANGE_STEP(State::Step::ALARM_PLAYING, "Alarm manual");
     }
-    else if (inputs.yellow_has_been_pressed())
+    else if (inputs.yellow_has_been_pressed(200))
     {
         _last_change = inputs.now_ms();
         _state.set_sun_value(0);
     }
-    else if (inputs.green_has_been_pressed())
+    else if (inputs.green_has_been_pressed(200))
     {
         _last_change = inputs.now_ms();
-        _state.set_sun_value(_state.get_sun_value() + 10);
+        _state.set_sun_value(outputs.sun().get_current_value() + 10);
     }
-    else if (inputs.yellow_long_pressed(100))
+    else if (inputs.yellow_long_pressed(200))
     {
         _last_change = inputs.now_ms();
-        _state.set_sun_value(_state.get_sun_value() - 1);
+        _state.set_sun_value(outputs.sun().get_current_value() - 1);
     }
-    else if (inputs.green_long_pressed(100))
+    else if (inputs.green_long_pressed(200))
     {
         _last_change = inputs.now_ms();
-        _state.set_sun_value(_state.get_sun_value() + 1);
+        _state.set_sun_value(outputs.sun().get_current_value() + 1);
     }
     else if(inputs.has_moved())
     {

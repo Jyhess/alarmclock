@@ -18,6 +18,7 @@ public:
     void loop(const State &state);
 
     inline bool is_on() const { return _target > 0; }
+    inline uint8_t get_current_value() const { return _last; }
 
 private:
     long _compute_current(unsigned long now_ms);

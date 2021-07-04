@@ -49,6 +49,6 @@ void setup()
 void loop()
 {
   g_inputs.loop();
-  g_runner.loop(g_inputs);
+  g_runner.loop(g_inputs, g_outputs);
   g_outputs.loop(g_state);
 }

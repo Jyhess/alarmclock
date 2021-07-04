@@ -22,4 +22,6 @@ public:
     );
     void setup();
     void loop(const State &state);
+
+    const Sun & sun() const { return _sun; }
 };
