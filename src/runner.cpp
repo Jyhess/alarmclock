@@ -47,9 +47,12 @@ void Runner::loop(const Inputs &inputs)
     if (_last_change == 0)
         _last_change = inputs.now_ms();
     _state.set_now_ms(inputs.now_ms());
-    _state.set_current_time(inputs.get_time());
+    if( inputs.get_time() != _state.get_current_time() )
+    {
+        _state.set_current_time(inputs.get_time());
+        _trigger_alarm_if_needed();
+    }
     //_state.set_debug_value(inputs.get_luminosity());
-    _trigger_alarm_if_needed();
     switch (_state.get_step())
     {
     case State::Step::NORMAL:
@@ -287,8 +290,9 @@ void Runner::_trigger_alarm_if_needed()
     // Allarm is off
     if (!_state.is_alarm_on() || _state.is_alarm_playing())
         return;
-    // Alarm is for the future
-    if (_state.get_current_time() != _state.get_alarm())
+    // Alarm is not for now
+    // We start alarm to have 100% at specified time
+    if (_state.get_current_time() + Time::from_seconds(AlarmRunner::alarm_switch_duration_s) != _state.get_alarm())
         return;
     _state.start_playing_alarm();
     CHANGE_STEP(State::Step::ALARM_PLAYING, "Alarm triggered");

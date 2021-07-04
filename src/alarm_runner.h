@@ -5,6 +5,14 @@
 
 class AlarmRunner
 {
+public:
+#ifdef DEBUG_ALARM
+    static const int16_t alarm_switch_duration_s = 120;
+#else
+    static const int16_t alarm_switch_duration_s = 30 * 60;
+#endif
+
+private:
     TimeS _alarm_start_time;
     Range<uint8_t, 0, 255> _alarm_value;
     TimeS _snooze_time;

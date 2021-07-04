@@ -87,8 +87,8 @@ public:
     inline const TimeS &get_current_time() const { return _time; }
     inline void set_current_time(const TimeS &value)
     {
+        _need_oled_update |= _time.get_second() != value.get_second();
         _time = value;
-        _need_oled_update = true;
     }
 
     inline const Time &get_edit_time() const { return _edit_time; }

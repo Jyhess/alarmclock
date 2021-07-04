@@ -67,11 +67,13 @@ void Oled::_draw_normal(const State &state)
         snprintf_P(debug_str, 6, PSTR("%d"), state.get_debug_value().value());
     }
 
+#ifdef DEBUG_ALARM
     char alarm_percent[6] = "";
     if (state.is_alarm_playing())
     {
         snprintf_P(alarm_percent, 6, PSTR("%d"), state.get_alarm_value());
     }
+#endif
     _u8g.display();
     _u8g.setContrast(state.get_display_brightness());
     _u8g.setFont(font_big);
@@ -79,7 +81,9 @@ void Oled::_draw_normal(const State &state)
     const u8g2_uint_t time_x = (width - _u8g.getStrWidth(time)) / 2;
     const u8g2_uint_t x_1 = 1 * width / 6;
     const u8g2_uint_t x_2 = 3 * width / 6;
+#ifdef DEBUG_ALARM
     const u8g2_uint_t x_3 = 5 * width / 6;
+#endif
 
     _u8g.firstPage();
     do
@@ -89,7 +93,9 @@ void Oled::_draw_normal(const State &state)
         _u8g.setFont(font_medium);
         _draw_item(x_1, alarm_y, debug_str, false);
         _draw_item(x_2, alarm_y, alarm, false);
+#ifdef DEBUG_ALARM
         _draw_item(x_3, alarm_y, alarm_percent, false);
+#endif
     } while (_u8g.nextPage());
 }
 

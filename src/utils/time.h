@@ -11,6 +11,7 @@ private:
 public:
     inline constexpr Time() : _hour(0), _minute(0) {}
     inline Time(uint8_t hour, uint8_t minute, uint8_t second = 0) : _hour(hour), _minute(minute) {}
+    static Time from_seconds(uint16_t seconds);
 
     inline uint8_t get_hour() const { return _hour; }
     inline void set_hour(uint8_t hour) { _hour = hour; }

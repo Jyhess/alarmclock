@@ -4,10 +4,8 @@
 namespace
 {
 #ifdef DEBUG_ALARM
-    const int16_t alarm_switch_duration_s = 30;
     const int16_t snooze_duration_s = 10;
 #else
-    const int16_t alarm_switch_duration_s = 30 * 60;
     const int16_t snooze_duration_s = 10 * 60;
 #endif
 }
