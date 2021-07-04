@@ -2,7 +2,6 @@
 
 #include <stdint.h>
 
-#include "step.h"
 #include "utils/time.h"
 #include "utils/optional.h"
 #include "utils/range.h"
@@ -11,6 +10,17 @@
 
 class State
 {
+public:
+    enum Step
+    {
+        NORMAL,
+        ALARM_SELECT,
+        ALARM_SET_HOUR,
+        ALARM_SET_MINUTE,
+        ALARM_PLAYING,
+        NO_DISPLAY
+    };
+
 private:
     unsigned long _now_ms;
     bool _need_oled_update;

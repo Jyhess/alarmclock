@@ -1,6 +1,5 @@
 #pragma once
 
-#include "step.h"
 #include "state.h"
 #include "inputs/inputs.h"
 
@@ -15,7 +14,6 @@ public:
 
 private:
     State & _state;
-    Step _step;
     unsigned long _last_change;
 
     void _process_normal(const Inputs &inputs);
@@ -27,7 +25,7 @@ private:
     void _process_off(const Inputs &inputs);
 
     void _change_step(
-        Step step
+        State::Step step
 #ifdef DEBUG_STEP
         ,
         const char *reason = nullptr

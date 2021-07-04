@@ -30,18 +30,18 @@ void Oled::loop(const State &state)
     {
         switch (state.get_step())
         {
-        case Step::NORMAL:
-        case Step::ALARM_PLAYING:
+        case State::Step::NORMAL:
+        case State::Step::ALARM_PLAYING:
             _draw_normal(state);
             break;
-        case Step::ALARM_SELECT:
+        case State::Step::ALARM_SELECT:
             _draw_alarm_select(state);
             break;
-        case Step::ALARM_SET_HOUR:
-        case Step::ALARM_SET_MINUTE:
+        case State::Step::ALARM_SET_HOUR:
+        case State::Step::ALARM_SET_MINUTE:
             _draw_alarm_set(state);
             break;
-        case Step::NO_DISPLAY:
+        case State::Step::NO_DISPLAY:
             _u8g.noDisplay();
             break;
         }
@@ -170,13 +170,13 @@ void Oled::_draw_alarm_set(const State &state)
     {
         _u8g.setFont(font_big);
         _u8g.drawStr(collon_x, alarm_y_, ":");
-        if (state.get_step() == ALARM_SET_HOUR)
+        if (state.get_step() == State::Step::ALARM_SET_HOUR)
         {
             _u8g.drawBox(hours_x-2, alarm_y_-big_font_height-2, hours_width+4, big_font_height+4);
             _u8g.setDrawColor(0);
         }
         _u8g.drawStr(hours_x, alarm_y_, hours);
-        if (state.get_step() == ALARM_SET_HOUR)
+        if (state.get_step() == State::Step::ALARM_SET_HOUR)
         {
             _u8g.setDrawColor(1);
         }
@@ -186,7 +186,7 @@ void Oled::_draw_alarm_set(const State &state)
             _u8g.setDrawColor(0);
         }
         _u8g.drawStr(minutes_x, alarm_y_, minutes);
-        if (state.get_step() != ALARM_SET_HOUR)
+        if (state.get_step() != State::Step::ALARM_SET_HOUR)
         {
             _u8g.setDrawColor(1);
         }
