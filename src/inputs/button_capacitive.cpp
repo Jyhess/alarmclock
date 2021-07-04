@@ -1,14 +1,13 @@
 #include <Arduino.h>
 
 #include "inputs/button_capacitive.h"
-#include "utils/ms_diff.h"
 
 namespace
 {
 
 }
 
-ButtonCapacitive::ButtonCapacitive(uint8_t pin) : _pin(pin), _previous_state(false), _current_state(false), _last_change(0)
+ButtonCapacitive::ButtonCapacitive(uint8_t pin) : _pin(pin), _previous_state(false), _current_state(false), _press_time(0), _release_time(0)
 {
 }
 
@@ -28,7 +27,10 @@ void ButtonCapacitive::loop(unsigned long now_ms)
 
     if (_previous_state != _current_state)
     {
-        _last_change = now_ms;
+        if(_current_state)
+            _press_time = now_ms;
+        else
+            _release_time = now_ms;
     }
 }
 
@@ -55,9 +57,4 @@ bool ButtonCapacitive::has_been_pressed() const
 bool ButtonCapacitive::has_been_released() const
 {
     return _previous_state && !_current_state;
-}
-
-unsigned long ButtonCapacitive::change_time(unsigned long now_ms) const
-{
-    return ms_diff(_last_change, now_ms);
 }

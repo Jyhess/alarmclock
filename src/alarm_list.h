@@ -12,7 +12,6 @@
 class AlarmList
 {
     Rtc &_rtc;
-    Time _custom_alarm;
     Time _alarms[SAVED_ALARMS];
     // Off = 6
     // New = 7
@@ -23,9 +22,6 @@ public:
     AlarmList(Rtc & rtc);
     void setup();
 
-    inline const Time &get_custom_alarm() const { return _custom_alarm; }
-    inline void set_custom_alarm(const Time &value) { _custom_alarm = value; }
-
     void save_alarm(const Time & value);
     void save_no_alarm();
     inline const Time &get_alarm(uint8_t alarm_index) const { return _alarms[alarm_index]; }
@@ -33,6 +29,7 @@ public:
     inline uint8_t get_alarm_index() const { return _alarm_index; }
     inline void set_alarm_index(uint8_t value) { _alarm_index = value; }
 
+    void save_time(const Time & value);
 private:
     void _move_to_front(const Time & alarm, uint8_t index);
     void _new_alarm(const Time & alarm);

@@ -107,6 +107,17 @@ TimeS Rtc::get_time()
     return TimeS(now.Hour(), now.Minute(), now.Second());
 }
 
+void Rtc::save_time(const Time & value)
+{
+    auto dt = GetDateTime();
+    _rtc.SetDateTime(
+        RtcDateTime(
+            dt.Year(), dt.Month(), dt.DayOfWeek(),
+            value.get_hour(), value.get_minute(), 0
+            )
+        );
+}
+
 void Rtc::save_alarm(const Time &alarm1, const Time &alarm2, const Time &alarm3, uint8_t alarm_index)
 {
     DS3231AlarmOne alarm_one(alarm1.get_hour(), alarm1.get_minute(), alarm2.get_hour(), alarm2.get_minute(), DS3231AlarmOneControl::DS3231AlarmOneControl_HoursMinutesSecondsMatch);

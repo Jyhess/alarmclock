@@ -31,34 +31,34 @@ void Inputs::loop()
     }
 }
 
-bool Inputs::red_has_been_pressed() const
+bool Inputs::red_has_been_pressed(unsigned long threshold) const
 {
-    return _red.has_been_pressed();
+    return _red.has_been_released() && ms_diff(_red.press_time(), _now_ms) < threshold;
 }
 
-bool Inputs::yellow_has_been_pressed() const
+bool Inputs::yellow_has_been_pressed(unsigned long threshold) const
 {
-    return _yellow.has_been_pressed();
+    return _yellow.has_been_released() && ms_diff(_yellow.press_time(), _now_ms) < threshold;
 }
 
-bool Inputs::green_has_been_pressed() const
+bool Inputs::green_has_been_pressed(unsigned long threshold) const
 {
-    return _green.has_been_pressed();
+    return _green.has_been_released() && ms_diff(_green.press_time(), _now_ms) < threshold;
 }
 
 unsigned long Inputs::red_long_pressed(unsigned long threshold) const
 {
-    return _red.is_pressed() && _red.change_time(_now_ms) > threshold;
+    return _red.is_pressed() && ms_diff(_red.press_time(), _now_ms) > threshold;
 }
 
 unsigned long Inputs::yellow_long_pressed(unsigned long threshold) const
 {
-    return _yellow.is_pressed() && _yellow.change_time(_now_ms) > threshold;
+    return _yellow.is_pressed() && ms_diff(_yellow.press_time(), _now_ms) > threshold;
 }
 
 unsigned long Inputs::green_long_pressed(unsigned long threshold) const
 {
-    return _green.is_pressed() && _green.change_time(_now_ms) > threshold;
+    return _green.is_pressed() && ms_diff(_green.press_time(), _now_ms) > threshold;
 }
 
 void Inputs::_read_rtc()

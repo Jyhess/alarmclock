@@ -16,9 +16,9 @@ public:
 
     inline Rtc &rtc() { return _rtc; }
 
-    bool red_has_been_pressed() const;
-    bool yellow_has_been_pressed() const;
-    bool green_has_been_pressed() const;
+    bool red_has_been_pressed(unsigned long threshold = 200) const;
+    bool yellow_has_been_pressed(unsigned long threshold = 200) const;
+    bool green_has_been_pressed(unsigned long threshold = 200) const;
     unsigned long red_long_pressed(unsigned long threshold) const;
     unsigned long yellow_long_pressed(unsigned long threshold) const;
     unsigned long green_long_pressed(unsigned long threshold) const;

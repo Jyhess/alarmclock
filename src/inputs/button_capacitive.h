@@ -10,7 +10,8 @@ private:
 
     bool _previous_state;
     bool _current_state;
-    unsigned long _last_change;
+    unsigned long _press_time;
+    unsigned long _release_time;
 
 public:
     ButtonCapacitive(uint8_t pin);
@@ -25,6 +26,7 @@ public:
     bool is_pressed() const;
     bool has_been_pressed() const;
     bool has_been_released() const;
-    unsigned long change_time(unsigned long now_ms) const;
+    inline unsigned long press_time() const { return _press_time; }
+    inline unsigned long release_time() const { return _release_time; };
 };
 

@@ -19,8 +19,8 @@ private:
     void _process_normal(const Inputs &inputs);
     void _process_alarm_select(const Inputs &inputs);
     void _process_alarm_on_off(const Inputs &inputs);
-    void _process_alarm_set_hour(const Inputs &inputs);
-    void _process_alarm_set_minute(const Inputs &inputs);
+    void _process_set_hour(const Inputs &inputs);
+    void _process_set_minute(const Inputs &inputs);
     void _process_alarm_playing(const Inputs &inputs);
     void _process_off(const Inputs &inputs);
 

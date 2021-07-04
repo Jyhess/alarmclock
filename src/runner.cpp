@@ -14,6 +14,7 @@ namespace
     const char red_pressed[] = "Red pressed";
 #endif
     const unsigned int long_press = 1000;
+    const unsigned int set_time_long_press = 3000;
 }
 
 Runner::Runner(State & state) : _state(state), _last_change(0) {}
@@ -27,7 +28,7 @@ void Runner::setup(Inputs &inputs)
     }
     else if (alarm_index == NEW_ALARM)
     {
-        _state.set_alarm(_state.get_alarms().get_custom_alarm());
+        _state.set_alarm(_state.get_edit_time());
     }
     else if (alarm_index < SAVED_ALARMS)
     {
@@ -52,16 +53,18 @@ void Runner::loop(const Inputs &inputs)
     switch (_state.get_step())
     {
     case State::Step::NORMAL:
-        _process_normal(inputs);
+        _process_normal(inputs, outputs);
         break;
     case State::Step::ALARM_SELECT:
         _process_alarm_select(inputs);
         break;
     case State::Step::ALARM_SET_HOUR:
-        _process_alarm_set_hour(inputs);
+    case State::Step::TIME_SET_HOUR:
+        _process_set_hour(inputs);
         break;
     case State::Step::ALARM_SET_MINUTE:
-        _process_alarm_set_minute(inputs);
+    case State::Step::TIME_SET_MINUTE:
+        _process_set_minute(inputs);
         break;
     case State::Step::ALARM_PLAYING:
         _process_alarm_playing(inputs);
@@ -74,9 +77,14 @@ void Runner::loop(const Inputs &inputs)
 
 void Runner::_process_normal(const Inputs &inputs)
 {
-    if (inputs.red_has_been_pressed())
+    if (inputs.red_has_been_pressed(set_time_long_press))
     {
         CHANGE_STEP(State::Step::ALARM_SELECT, red_pressed);
+    }
+    else if (inputs.red_long_pressed(set_time_long_press))
+    {
+        _state.set_edit_time(_state.get_current_time().hm());
+        CHANGE_STEP(State::Step::TIME_SET_HOUR, red_pressed);
     }
     else if (inputs.yellow_has_been_pressed() && inputs.green_has_been_pressed())
     {
@@ -128,7 +136,7 @@ void Runner::_process_normal(const Inputs &inputs)
 
 void Runner::_process_alarm_select(const Inputs &inputs)
 {
-    int8_t alarm_index = _state.get_alarms().get_alarm_index();
+    int8_t alarm_index = _state.get_alarm_index();
     if (inputs.red_has_been_pressed())
     {
         if (alarm_index == NO_ALARM)
@@ -138,6 +146,7 @@ void Runner::_process_alarm_select(const Inputs &inputs)
         }
         else if (alarm_index == NEW_ALARM)
         {
+            _state.set_edit_time(_state.alarms().get_alarm(0));
             CHANGE_STEP(State::Step::ALARM_SET_HOUR, red_pressed);
         }
         else
@@ -164,47 +173,60 @@ void Runner::_process_alarm_select(const Inputs &inputs)
         }
         else
             return;
-        _state.alarms().set_alarm_index(alarm_index);
+        _state.set_alarm_index(alarm_index);
     }
 }
 
-void Runner::_process_alarm_set_hour(const Inputs &inputs)
+void Runner::_process_set_hour(const Inputs &inputs)
 {
-    AlarmList & alarms = _state.alarms();
     if (inputs.red_has_been_pressed())
     {
-        CHANGE_STEP(State::Step::ALARM_SET_MINUTE, red_pressed);
+        if(_state.get_step() == State::Step::ALARM_SET_HOUR)
+        {
+            CHANGE_STEP(State::Step::ALARM_SET_MINUTE, red_pressed);
+        }
+        else
+        {
+            CHANGE_STEP(State::Step::TIME_SET_MINUTE, red_pressed);
+        }
     }
     else if (inputs.yellow_has_been_pressed() || inputs.yellow_long_pressed(long_press))
     {
-        Time alarm = alarms.get_custom_alarm();
-        alarms.set_custom_alarm(alarm.add_hour(-1));
+        Time alarm = _state.get_edit_time();
+        _state.set_edit_time(alarm.add_hour(-1));
     }
     else if (inputs.green_has_been_pressed() || inputs.green_long_pressed(long_press))
     {
-        Time alarm = alarms.get_custom_alarm();
-        alarms.set_custom_alarm(alarm.add_hour(1));
+        Time alarm = _state.get_edit_time();
+        _state.set_edit_time(alarm.add_hour(1));
     }
 }
 
-void Runner::_process_alarm_set_minute(const Inputs &inputs)
+void Runner::_process_set_minute(const Inputs &inputs)
 {
-    AlarmList & alarms = _state.alarms();
     if (inputs.red_has_been_pressed())
     {
-        _state.set_alarm(alarms.get_custom_alarm());
+        if(_state.get_step() == State::Step::ALARM_SET_MINUTE)
+        {
+            _state.set_alarm(_state.get_edit_time());
+        }
+        else
+        {
+            _state.alarms().save_time(_state.get_edit_time());
+            _state.set_current_time(_state.get_edit_time());
+        }
         CHANGE_STEP(State::Step::NORMAL, red_pressed);
         _last_change = inputs.now_ms();
     }
     else if (inputs.yellow_has_been_pressed() || inputs.yellow_long_pressed(long_press))
     {
-        Time alarm = alarms.get_custom_alarm();
-        alarms.set_custom_alarm(alarm.add_minute(-1));
+        Time alarm = _state.get_edit_time();
+        _state.set_edit_time(alarm.add_minute(-1));
     }
     else if (inputs.green_has_been_pressed() || inputs.green_long_pressed(long_press))
     {
-        Time alarm = alarms.get_custom_alarm();
-        alarms.set_custom_alarm(alarm.add_minute(1));
+        Time alarm = _state.get_edit_time();
+        _state.set_edit_time(alarm.add_minute(1));
     }
 }
 

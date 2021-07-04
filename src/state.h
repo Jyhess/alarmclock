@@ -18,6 +18,8 @@ public:
         ALARM_SET_HOUR,
         ALARM_SET_MINUTE,
         ALARM_PLAYING,
+        TIME_SET_HOUR,
+        TIME_SET_MINUTE,
         NO_DISPLAY
     };
 
@@ -29,6 +31,7 @@ private:
     TimeS _time;
     Optional<Time> _alarm;
     Step _step;
+    Time _edit_time;
 
     AlarmList &_alarm_list;
     Optional<AlarmRunner> _alarm_runner;
@@ -39,7 +42,10 @@ private:
 public:
     State(AlarmList &_alarm_list);
 
-    inline void setup() {}
+    inline void setup()
+    {
+        _edit_time = _alarm_list.get_alarm(0);
+    }
 
     bool is_updated() const;
     void clear_updated();
@@ -85,6 +91,23 @@ public:
         _need_oled_update = true;
     }
 
+    inline const Time &get_edit_time() const { return _edit_time; }
+    inline void set_edit_time(const Time &value)
+    {
+        if(_edit_time != value )
+        {
+            _edit_time = value;
+            _need_oled_update = true;
+        }
+    }
+
+    inline uint8_t get_alarm_index() const { return _alarm_list.get_alarm_index(); }
+    inline void set_alarm_index(uint8_t value)
+    {
+        _alarm_list.set_alarm_index(value);
+        _need_oled_update = true;
+    }
+
     inline bool is_alarm_on() const { return _alarm.has_value(); }
     inline const Time &get_alarm() const { return _alarm.value(); }
     inline void set_alarm(const Time &value)
@@ -92,6 +115,7 @@ public:
         _alarm = value;
         _alarm_list.save_alarm(value);
         _need_oled_update = true;
+        _edit_time = value;
     }
     inline void switch_off_alarm()
     {
