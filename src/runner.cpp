@@ -52,7 +52,7 @@ void Runner::loop(const Inputs &inputs, const Outputs & outputs)
         _state.set_current_time(inputs.get_time());
         _trigger_alarm_if_needed();
     }
-    //_state.set_debug_value(inputs.get_luminosity());
+    _state.set_debug_value(inputs.get_luminosity());
     switch (_state.get_step())
     {
     case State::Step::NORMAL:
@@ -123,6 +123,7 @@ void Runner::_process_normal(const Inputs &inputs, const Outputs & outputs)
         if (!_state.is_alarm_playing() && _state.get_sun_value() == 0 && ms_diff(_last_change, inputs.now_ms()) > off_threshold)
         {
             CHANGE_STEP(State::Step::NO_DISPLAY, "No actions in dark");
+            //_state.set_updated();
         }
         else
         {
