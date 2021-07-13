@@ -62,13 +62,13 @@ void Rtc::setup()
     }
 #else
     _rtc.SetIsRunning(true);
-    const RtcDateTime now = _rtc.GetDateTime();
-    const RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
-    if (now < compiled)
-    {
-        Serial.println("RTC time set");
-        _rtc.SetDateTime(compiled);
-    }
+    //const RtcDateTime now = _rtc.GetDateTime();
+    //const RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
+    //if (now < compiled)
+    //{
+    //    Serial.println("RTC time set");
+    //    _rtc.SetDateTime(compiled);
+    //}
 #endif
 
     // never assume the Rtc was last configured by you, so
