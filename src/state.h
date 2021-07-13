@@ -49,6 +49,7 @@ public:
 
     bool is_updated() const;
     void clear_updated();
+    inline void set_updated() { _need_oled_update = true; }
 
     inline Optional<int16_t> get_debug_value() const { return _debug_value; }
     inline void set_debug_value(int16_t value)
