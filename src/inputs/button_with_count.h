@@ -12,7 +12,7 @@ public:
         Both
     };
 
-    ButtonWithCount(uint8_t pin);
+    explicit ButtonWithCount(uint8_t pin);
     void setup();
     void loop(unsigned long now_ms);
 

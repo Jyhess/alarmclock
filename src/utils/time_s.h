@@ -12,7 +12,7 @@ private:
 public:
     inline constexpr TimeS() : _second(0) {}
     inline TimeS(const Time &time, uint8_t second = 0) : _hm(time), _second(second) {}
-    inline TimeS(uint8_t hour, uint8_t minute, uint8_t second = 0) : _hm(hour, minute), _second(second) {}
+    inline TimeS(uint8_t hour, uint8_t minute = 0, uint8_t second = 0) : _hm(hour, minute), _second(second) {}
 
     inline uint8_t get_hour() const { return _hm.get_hour(); }
     inline void set_hour(uint8_t hour) { _hm.set_hour(hour); }
