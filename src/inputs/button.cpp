@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
 #include "inputs/button.h"
-#include "utils/ms_diff.h"
+#include "js_ms_diff.h"
 
 namespace
 {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "utils/time.h"
+#include "js_time.h"
 #include "inputs/button_capacitive.h"
 #include "inputs/rtc.h"
 #include "inputs/luminosity.h"

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <stdint.h>
-#include <utils/time.h>
+#include "js_time.h"
 
 class TimeS
 {

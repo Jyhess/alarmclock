@@ -1,7 +1,7 @@
 #pragma once
 
-#include "utils/time_s.h"
-#include "utils/range.h"
+#include "js_time_s.h"
+#include "js_range.h"
 
 class AlarmRunner
 {

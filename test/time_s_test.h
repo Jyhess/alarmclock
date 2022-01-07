@@ -1,5 +1,5 @@
 
-#include "utils/time_s.h"
+#include "js_time_s.h"
 #include <unity.h>
 
 namespace time_s

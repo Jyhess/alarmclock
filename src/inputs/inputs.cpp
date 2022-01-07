@@ -1,5 +1,5 @@
 #include "inputs/inputs.h"
-#include "utils/ms_diff.h"
+#include "js_ms_diff.h"
 
 Inputs::Inputs(uint8_t red_pin, uint8_t yellow_pin, uint8_t green_pin, uint8_t luminosity_pin, uint8_t vibration_pin)
  : _now_ms(0), _red(red_pin), _yellow(yellow_pin), _green(green_pin), _luminosity(luminosity_pin), _vibration(vibration_pin), _last_rtc_read(0)

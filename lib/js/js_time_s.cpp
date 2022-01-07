@@ -1,4 +1,4 @@
-#include "utils/time_s.h"
+#include "js_time_s.h"
 
 TimeS &TimeS::add_hms(int16_t hours, int16_t minutes, int16_t seconds)
 {

@@ -2,7 +2,7 @@
 
 #include <stdint.h>
 
-#include "utils/time.h"
+#include "js_time.h"
 #include "inputs/rtc.h"
 
 #define SAVED_ALARMS 6

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "default_value.h"
+#include "js_default_value.h"
 
 template <class T, T Min, T Max>
 class Range

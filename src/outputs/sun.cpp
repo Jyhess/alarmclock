@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include "outputs/sun.h"
-#include "utils/ms_diff.h"
+#include "js_ms_diff.h"
 
 namespace
 {
