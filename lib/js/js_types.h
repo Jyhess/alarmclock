@@ -1,3 +1,7 @@
 #pragma once
 
-typedef unsigned int size_t;
+#include <stdint.h>
+
+#ifndef __cpp_constexpr
+#  define constexpr
+#endif

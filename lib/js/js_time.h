@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include "js_types.h"
 
 class Time
 {

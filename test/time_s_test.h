@@ -47,7 +47,7 @@ namespace time_s
         TEST_ASSERT_EQUAL(55, t.get_minute());
         TEST_ASSERT_EQUAL(50, t.get_second());
         t.add_hms(0, 0, -59);
-        TEST_ASSERT_EQUAL(22, t.get_hour());
+        TEST_ASSERT_EQUAL(21, t.get_hour());
         TEST_ASSERT_EQUAL(54, t.get_minute());
         TEST_ASSERT_EQUAL(51, t.get_second());
     }
