@@ -1,5 +1,6 @@
 #pragma once
 
+#include "js_types.h"
 #include "js_default_value.h"
 
 template <class T>

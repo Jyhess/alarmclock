@@ -3,7 +3,7 @@
 #include "js_move.h"
 #include "js_types.h"
 
-template <typename Tp_, size_t n_>
+template <typename Tp_, uint8_t n_>
 class Array
 {
     Tp_ _data[n_];
@@ -27,8 +27,8 @@ public:
     //             ** Data Access **
     //============================================
 
-    Tp_ &operator[](const size_t &index) { return Array::_data[index]; }
-    const Tp_ &operator[](const size_t &index) const { return Array::_data[index]; }
+    Tp_ &operator[](const uint8_t &index) { return Array::_data[index]; }
+    const Tp_ &operator[](const uint8_t &index) const { return Array::_data[index]; }
 
     Tp_ *begin(void) { return Array::_data; }
     Tp_ *end(void) { return Array::_data + n_; }
@@ -45,5 +45,5 @@ public:
     Tp_ *data(void) { return Array::_data; }
     const Tp_ *data() const { return Array::_data; }
 
-    static constexpr size_t size(void) { return n_; }
+    static constexpr uint8_t size(void) { return n_; }
 };

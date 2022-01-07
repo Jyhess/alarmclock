@@ -1,6 +1,6 @@
 #pragma once
 
-#include <stdint.h>
+#include "js_types.h"
 
 template <class T>
 struct default_value
