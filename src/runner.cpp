@@ -1,5 +1,5 @@
 #include "runner.h"
-#include "utils/ms_diff.h"
+#include "js_ms_diff.h"
 
 #ifdef DEBUG_STEP
 #define CHANGE_STEP(step, label) _change_step(step, label);

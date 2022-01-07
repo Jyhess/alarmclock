@@ -1,7 +1,7 @@
 #pragma once
 
 #include "U8g2lib.h"
-#include "utils/time.h"
+#include "js_time.h"
 #include "state.h"
 
 class Oled

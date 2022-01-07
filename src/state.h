@@ -2,9 +2,9 @@
 
 #include <stdint.h>
 
-#include "utils/time.h"
-#include "utils/optional.h"
-#include "utils/range.h"
+#include "js_time.h"
+#include "js_optional.h"
+#include "js_range.h"
 #include "alarm_list.h"
 #include "alarm_runner.h"
 

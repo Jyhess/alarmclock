@@ -1,7 +1,7 @@
 #pragma once
 
-#include "utils/move.h"
-#include "utils/types.h"
+#include "js_move.h"
+#include "js_types.h"
 
 template <typename Tp_, size_t n_>
 class Array

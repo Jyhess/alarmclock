@@ -1,4 +1,4 @@
-#include "utils/time.h"
+#include "js_time.h"
 
 Time Time::from_seconds(uint16_t seconds)
 {

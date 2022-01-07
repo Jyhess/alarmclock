@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
-#include "utils/pitches.h"
-#include "utils/ms_diff.h"
+#include "js_ms_diff.h"
+#include "outputs/pitches.h"
 #include "outputs/buzzer.h"
 
 namespace

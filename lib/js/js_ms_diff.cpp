@@ -1,4 +1,4 @@
-#include "utils/ms_diff.h"
+#include "js_ms_diff.h"
 
 unsigned long ms_diff(unsigned long start_time, unsigned long now)
 {
