@@ -26,7 +26,7 @@ private:
     unsigned long _last_debounce_time; // the last time the output pin was toggled
 
 public:
-    Button(uint8_t pin);
+    explicit Button(uint8_t pin);
 
     void setup();
     void loop(unsigned long now_ms);
