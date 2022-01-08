@@ -6,7 +6,7 @@ AlarmList::AlarmList(Rtc & rtc) : _rtc(rtc), _alarm_index(NO_ALARM)
 
 void AlarmList::setup()
 {
-    _rtc.read_alarm(_alarms[0], _alarms[1], _alarms[2], _alarm_index);
+    _rtc.read_alarm(_alarms[0], _alarms[1], _alarms[2], _alarms[3], _alarms[4], _alarms[5], _alarm_index);
 }
 
 void AlarmList::save_alarm(const Time & alarm)
@@ -15,13 +15,13 @@ void AlarmList::save_alarm(const Time & alarm)
     // We copy to prevent a reference of _alarms item
     // which may be modified by reorganisation
     _new_alarm(Time(alarm));
-    _rtc.save_alarm(_alarms[0], _alarms[1], _alarms[2], _alarm_index);
+    _rtc.save_alarm(_alarms[0], _alarms[1], _alarms[2], _alarms[3], _alarms[4], _alarms[5], _alarm_index);
 }
 
 void AlarmList::save_no_alarm()
 {
     _alarm_index = NO_ALARM;
-    _rtc.save_alarm(_alarms[0], _alarms[1], _alarms[2], _alarm_index);
+    _rtc.save_alarm(_alarms[0], _alarms[1], _alarms[2], _alarms[3], _alarms[4], _alarms[5], _alarm_index);
 }
 
 void AlarmList::save_time(const Time & value)
