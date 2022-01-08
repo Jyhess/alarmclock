@@ -1,10 +1,14 @@
 #include "js_time.h"
 
-Time Time::from_seconds(uint16_t seconds)
+Time Time::from_minutes(uint16_t minutes)
 {
-    uint16_t hours = seconds / 3600;
-    uint8_t minutes = (seconds - hours * 3600) / 60;
-    return Time(hours % 60, minutes);
+    uint16_t hours = minutes / 60;
+    return Time(hours % 24, minutes - hours * 60);
+}
+
+Time Time::from_seconds(uint32_t seconds)
+{
+    return Time::from_minutes(seconds / 60);
 }
 
 Time &Time::add_hour(int16_t hours)
