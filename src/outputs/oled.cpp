@@ -123,8 +123,8 @@ void Oled::_draw_alarm_select(const State &state)
     do
     {
         _u8g.setFont(font_small);
-        _draw_item(x_1, y_1, "OFF", id == NO_ALARM);
-        _draw_item(x_3, y_1, "NEW", id == NEW_ALARM);
+        _draw_item(x_1, y_1, "NEW", id == NEW_ALARM);
+        _draw_item(x_3, y_1, "OFF", id == NO_ALARM);
         _draw_item(x_1, y_2, alarms[0], id == 0);
         _draw_item(x_2, y_2, alarms[1], id == 1);
         _draw_item(x_3, y_2, alarms[2], id == 2);

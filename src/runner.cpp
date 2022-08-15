@@ -164,13 +164,13 @@ void Runner::_process_alarm_select(const Inputs &inputs)
         if (inputs.yellow_has_been_pressed())
         {
             if (alarm_index == 0)
-                alarm_index = NEW_ALARM;
+                alarm_index = NO_ALARM;
             else
                 alarm_index--;
         }
         else if (inputs.green_has_been_pressed())
         {
-            if (alarm_index == NEW_ALARM)
+            if (alarm_index == NO_ALARM)
                 alarm_index = 0;
             else
                 alarm_index++;
