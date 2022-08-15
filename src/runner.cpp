@@ -52,7 +52,7 @@ void Runner::loop(const Inputs &inputs, const Outputs & outputs)
         _state.set_current_time(inputs.get_time());
         _trigger_alarm_if_needed();
     }
-    _state.set_debug_value(inputs.get_luminosity());
+    //_state.set_debug_value(inputs.get_luminosity());
     switch (_state.get_step())
     {
     case State::Step::NORMAL:
