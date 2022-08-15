@@ -102,7 +102,22 @@ void Runner::_process_normal(const Inputs &inputs, const Outputs & outputs)
     else if (inputs.green_has_been_pressed(200))
     {
         _last_change = inputs.now_ms();
-        _state.set_sun_value(outputs.sun().get_current_value() + 10);
+        // When we increase luminosity with single click, we want only 4 different values
+        // only red light
+        // slight yellow light
+        // max yellow light
+        // max white light
+        const uint8_t sun_steps[] = {10, 50, 180, 255};
+        uint8_t sun_value = outputs.sun().get_current_value();
+        for (uint8_t i = 0; i < 4; ++i)
+        {
+            if (sun_value < sun_steps[i])
+            {
+                sun_value = sun_steps[i];
+                break;
+            }
+        }
+        _state.set_sun_value(sun_value);
     }
     else if (inputs.yellow_long_pressed(200))
     {
