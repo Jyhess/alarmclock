@@ -6,15 +6,15 @@
 #include "inputs/rtc.h"
 
 #define SAVED_ALARMS 6
-#define NO_ALARM SAVED_ALARMS
-#define NEW_ALARM SAVED_ALARMS + 1
+#define NEW_ALARM SAVED_ALARMS
+#define NO_ALARM SAVED_ALARMS + 1
 
 class AlarmList
 {
     Rtc &_rtc;
     Time _alarms[SAVED_ALARMS];
-    // Off = 6
-    // New = 7
+    // New = 6
+    // Off = 7
     // Predefined = [0,SAVED_ALARMS[
     uint8_t _alarm_index;
 
