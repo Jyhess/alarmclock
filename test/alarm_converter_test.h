@@ -3,6 +3,7 @@
 #include "js_asserts.h"
 #include <unity.h>
 #include <iostream>
+#include <array>
 
 namespace alarm_converter
 {
@@ -43,7 +44,7 @@ namespace alarm_converter
         Time src3(21, 57);
         Time src4(22, 58);
         Time src5(23, 59);
-        uint8_t src_flag = 5;
+        uint8_t src_flag = 7;
         Time dst0;
         Time dst1;
         Time dst2;
@@ -61,8 +62,41 @@ namespace alarm_converter
         TEST_ASSERT_TIME_EQUAL(src3, dst3);
         TEST_ASSERT_TIME_EQUAL(src4, dst4);
         //TEST_ASSERT_TIME_EQUAL(src5, dst5); // Can save only 5 alarms with 7 bytes
-        TEST_ASSERT_EQUAL(1, dst_flag);
+        TEST_ASSERT_EQUAL(src_flag, dst_flag);
     }
+
+    class MockWire
+    {
+    public:
+        std::array<uint8_t, 12> data;
+        int _cursor;
+        MockWire(): _cursor(0) { data.fill(0xAA); }
+
+        void beginTransmission(uint8_t) { _cursor = 0; }
+        uint8_t endTransmission(void) { return 0;  }
+        uint8_t requestFrom(uint8_t, uint8_t size)
+        {
+            return size;
+        }
+        size_t write(uint8_t value)
+        {
+            if(_cursor == 0)
+            {
+                _cursor = value;
+            }
+            else
+            {
+                data[_cursor++] = value;
+            }
+            return 0;
+        }
+        int read(void)
+        {
+            return data[_cursor++];
+        }
+    };
+
+    typedef AlarmStore<MockWire, 0, 1, 4, 6, 3> MockAlarmStore;
 
     void test_save_alarm()
     {
@@ -73,32 +107,10 @@ namespace alarm_converter
         Time src3(21, 57);
         Time src4(22, 58);
         Time src5(23, 59);
-        uint8_t src_flag = 3;
-        uint64_t value = serialize_alarms(src0, src1, src2, src3, src4, src5, src_flag);
-
-        uint8_t reg_alarms[7];
-        // Alarm 1
-        reg_alarms[0] = static_cast<uint8_t>(value);
-        reg_alarms[1] = static_cast<uint8_t>(value >> 8);
-        reg_alarms[2] = static_cast<uint8_t>(value >> 16);
-        reg_alarms[3] = static_cast<uint8_t>(value >> 24);
-
-        // Alarm 2
-        reg_alarms[4] = static_cast<uint8_t>(value >> 32);
-        reg_alarms[5] = static_cast<uint8_t>(value >> 40);
-        reg_alarms[6] = static_cast<uint8_t>(value >> 48);
-
-        uint64_t read = static_cast<uint64_t>(reg_alarms[0])
-          + (static_cast<uint64_t>(reg_alarms[1]) << 8) 
-          + (static_cast<uint64_t>(reg_alarms[2]) << 16)
-          + (static_cast<uint64_t>(reg_alarms[3]) << 24)
-          ;
-
-        read += (static_cast<uint64_t>(reg_alarms[4]) << 32) +
-            (static_cast<uint64_t>(reg_alarms[5]) << 40) +
-            (static_cast<uint64_t>(reg_alarms[6]) << 48)
-            ;
-
+        uint8_t src_flag = 7;
+        MockWire wire;
+        MockAlarmStore store(wire);
+        store.save_alarm(src0, src1, src2, src3, src4, src5, src_flag);
 
         Time dst0;
         Time dst1;
@@ -107,20 +119,14 @@ namespace alarm_converter
         Time dst4;
         Time dst5;
         uint8_t dst_flag;
-        deserialize_alarm(read, dst0, dst1, dst2, dst3, dst4, dst5, dst_flag);
-/*
-        std::cout << "value=" << std::hex << value << std::endl;
-        for (int i = 0; i < 8; ++i) {
-          std::cout << "reg_alarm[" << i << "]=" << std::hex << (int)reg_alarms[i] << std::endl;
-        }
-        std::cout << "read=" << std::hex << read << std::endl;
-*/
+        store.read_alarm(dst0, dst1, dst2, dst3, dst4, dst5, dst_flag);
+
         TEST_ASSERT_TIME_EQUAL(src0, dst0);
         TEST_ASSERT_TIME_EQUAL(src1, dst1);
         TEST_ASSERT_TIME_EQUAL(src2, dst2);
         TEST_ASSERT_TIME_EQUAL(src3, dst3);
         TEST_ASSERT_TIME_EQUAL(src4, dst4);
         //TEST_ASSERT_TIME_EQUAL(src5, dst5); // Can save only 5 alarms with 7 bytes
-        TEST_ASSERT_EQUAL(1, dst_flag);
+        TEST_ASSERT_EQUAL(src_flag, dst_flag);
     }
 }

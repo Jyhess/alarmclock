@@ -121,83 +121,24 @@ void Rtc::save_time(const Time & value)
 
 void Rtc::save_alarm(const Time &alarm1, const Time &alarm2, const Time &alarm3, const Time &alarm4, const Time &alarm5, const Time &alarm6, uint8_t alarm_index)
 {
-    uint64_t value = serialize_alarms(alarm1, alarm2, alarm3, alarm4, alarm5, alarm6, alarm_index);
-    _wire.beginTransmission(DS3231_ADDRESS);
-    _wire.write(DS3231_REG_ALARMONE);
-    _wire.write(static_cast<uint8_t>(value));
-    _wire.write(static_cast<uint8_t>(value >> 8));
-    _wire.write(static_cast<uint8_t>(value >> 16));
-    _wire.write(static_cast<uint8_t>(value >> 24));
-    uint8_t lastError = _wire.endTransmission();
-    if( lastError != 0)
-    {
+  AlarmStore<TwoWire, DS3231_ADDRESS, DS3231_REG_ALARMONE, DS3231_REG_ALARMONE_SIZE, DS3231_REG_ALARMTWO, DS3231_REG_ALARMTWO_SIZE> store(_wire);
+  int error = store.save_alarm(alarm1, alarm2, alarm3, alarm4, alarm5, alarm6, alarm_index);
+  if (error) {
 #ifdef DEBUG_RTC
-        Serial.print("Error write DS3231_REG_ALARMONE");
+        Serial.print(error.c_str());
 #endif
-        return;
-    }
-    _wire.beginTransmission(DS3231_ADDRESS);
-    _wire.write(DS3231_REG_ALARMTWO);
-    _wire.write(static_cast<uint8_t>(value >> 32));
-    _wire.write(static_cast<uint8_t>(value >> 40));
-    _wire.write(static_cast<uint8_t>(value >> 48));
-    lastError = _wire.endTransmission();
-    if( lastError != 0)
-    {
-#ifdef DEBUG_RTC
-        Serial.print("Error write DS3231_REG_ALARMTWO");
-#endif
-        return;
     }
 }
 
 void Rtc::read_alarm(Time &alarm1, Time &alarm2, Time &alarm3, Time &alarm4, Time &alarm5, Time &alarm6, uint8_t &alarm_index)
 {
-    _wire.beginTransmission(DS3231_ADDRESS);
-    _wire.write(DS3231_REG_ALARMONE);
-    uint8_t lastError = _wire.endTransmission();
-    if (lastError != 0)
-    {
+  AlarmStore<TwoWire, DS3231_ADDRESS, DS3231_REG_ALARMONE, DS3231_REG_ALARMONE_SIZE, DS3231_REG_ALARMTWO, DS3231_REG_ALARMTWO_SIZE> store(_wire);
+  int error = store.read_alarm(alarm1, alarm2, alarm3, alarm4, alarm5, alarm6, alarm_index);
+  if (error) {
 #ifdef DEBUG_RTC
-        Serial.print("Error read DS3231_REG_ALARMONE");
+        Serial.print(error.c_str());
 #endif
-      return;
     }
-
-    uint8_t bytesRead = _wire.requestFrom(DS3231_ADDRESS, DS3231_REG_ALARMONE_SIZE);
-    if (DS3231_REG_ALARMONE_SIZE != bytesRead)
-    {
-#ifdef DEBUG_RTC
-        Serial.print("Error read DS3231_REG_ALARMONE_SIZE");
-#endif
-      return;
-    }
-    uint64_t value =
-        static_cast<uint64_t>(_wire.read()) + (static_cast<uint64_t>(_wire.read()) << 8) +
-        (static_cast<uint64_t>(_wire.read()) << 16) + (static_cast<uint64_t>(_wire.read()) << 24);
-    _wire.beginTransmission(DS3231_ADDRESS);
-    _wire.write(DS3231_REG_ALARMTWO);
-    lastError = _wire.endTransmission();
-    if (lastError != 0)
-    {
-#ifdef DEBUG_RTC
-        Serial.print("Error read DS3231_REG_ALARMTWO");
-#endif
-        return;
-    }
-
-     bytesRead = _wire.requestFrom(DS3231_ADDRESS, DS3231_REG_ALARMTWO_SIZE);
-    if (DS3231_REG_ALARMTWO_SIZE != bytesRead)
-    {
-#ifdef DEBUG_RTC
-        Serial.print("Error read DS3231_REG_ALARMTWO_SIZE");
-#endif
-        return;
-    }
-    value += (static_cast<uint64_t>(_wire.read()) << 32) +
-             (static_cast<uint64_t>(_wire.read()) << 40) +
-             (static_cast<uint64_t>(_wire.read()) << 48);
-    deserialize_alarm(value, alarm1, alarm2, alarm3, alarm4, alarm5, alarm6, alarm_index);
 }
 
 #ifdef DEBUG_RTC
