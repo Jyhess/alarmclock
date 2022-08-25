@@ -12,7 +12,7 @@ private:
 
 public:
     constexpr Optional() : _value(default_value<T>::value), _has_value(false) {}
-    Optional(const T &value) : _value(value), _has_value(true) {}
+    explicit Optional(const T &value) : _value(value), _has_value(true) {}
 
     Optional &operator=(const Optional &other)
     {

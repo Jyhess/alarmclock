@@ -9,7 +9,7 @@ private:
     uint8_t _value;
 
 public:
-    Vibration(uint8_t pin);
+    explicit Vibration(uint8_t pin);
     void setup();
     void loop(unsigned long now_ms);
 

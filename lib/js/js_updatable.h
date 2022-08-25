@@ -9,7 +9,7 @@ private:
 
 public:
     Updatable() : _updated(true) {}
-    Updatable(const T &value) : _value(value), _updated(true) {}
+    explicit Updatable(const T &value) : _value(value), _updated(true) {}
 
     Updatable &operator=(const Updatable &other)
     {

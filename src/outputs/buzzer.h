@@ -11,7 +11,7 @@ private:
     bool _is_playing;
 
 public:
-    Buzzer(uint8_t pin);
+    explicit Buzzer(uint8_t pin);
     void setup();
     void loop(const State &state);
 

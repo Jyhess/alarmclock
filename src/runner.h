@@ -9,7 +9,7 @@
 class Runner
 {
 public:
-    Runner(State & state);
+    explicit Runner(State & state);
     void setup(Inputs &inputs);
     void loop(const Inputs &inputs, const Outputs & outputs);
 

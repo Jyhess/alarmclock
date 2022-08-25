@@ -14,7 +14,7 @@ private:
     unsigned long _release_time;
 
 public:
-    ButtonCapacitive(uint8_t pin);
+    explicit ButtonCapacitive(uint8_t pin);
 
     void setup();
     void loop(unsigned long now_ms);

@@ -20,7 +20,7 @@ private:
 
 public:
     constexpr AlarmRunner(): _snooze_value(0) {}
-    AlarmRunner(const TimeS &start_time) : _alarm_start_time(start_time), _snooze_value(0) {}
+    explicit AlarmRunner(const TimeS &start_time) : _alarm_start_time(start_time), _snooze_value(0) {}
 
     void snooze_alarm(const TimeS &current_time);
     inline const TimeS &get_snooze_time() const { return _snooze_time; }

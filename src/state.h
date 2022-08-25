@@ -40,7 +40,7 @@ private:
     Optional<int16_t> _debug_value;
 
 public:
-    State(AlarmList &_alarm_list);
+    explicit State(AlarmList &_alarm_list);
 
     inline void setup()
     {

@@ -19,7 +19,7 @@ class AlarmList
     uint8_t _alarm_index;
 
 public:
-    AlarmList(Rtc & rtc);
+    explicit AlarmList(Rtc & rtc);
     void setup();
 
     void save_alarm(const Time & value);

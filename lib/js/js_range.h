@@ -11,7 +11,7 @@ private:
 public:
     constexpr Range() : _value(default_value<T>::value) {}
     Range(const Range &other) = default;
-    Range(const T &value) : _value(value)
+    explicit Range(const T &value) : _value(value)
     {
         set_value(_value);
     }
