@@ -11,7 +11,7 @@ namespace
 {
     const unsigned int off_threshold = 30000;
 #ifdef DEBUG_STEP
-    const char red_pressed[] = "Red pressed";
+    const char middle_pressed[] = "Middle pressed";
 #endif
     const unsigned int long_press = 500;
     const unsigned int set_time_long_press = 3000;
@@ -80,26 +80,26 @@ void Runner::loop(const Inputs &inputs, const Outputs & outputs)
 
 void Runner::_process_normal(const Inputs &inputs, const Outputs & outputs)
 {
-    if (inputs.red_has_been_pressed(set_time_long_press))
+    if (inputs.middle_has_been_pressed(set_time_long_press))
     {
-        CHANGE_STEP(State::Step::ALARM_SELECT, red_pressed);
+        CHANGE_STEP(State::Step::ALARM_SELECT, middle_pressed);
     }
-    else if (inputs.red_long_pressed(set_time_long_press))
+    else if (inputs.middle_long_pressed(set_time_long_press))
     {
         _state.set_edit_time(_state.get_current_time().hm());
-        CHANGE_STEP(State::Step::TIME_SET_HOUR, red_pressed);
+        CHANGE_STEP(State::Step::TIME_SET_HOUR, middle_pressed);
     }
-    else if (inputs.yellow_has_been_pressed() && inputs.green_has_been_pressed())
+    else if (inputs.left_has_been_pressed() && inputs.right_has_been_pressed())
     {
         _state.start_playing_alarm();
         CHANGE_STEP(State::Step::ALARM_PLAYING, "Alarm manual");
     }
-    else if (inputs.yellow_has_been_pressed(200))
+    else if (inputs.left_has_been_pressed(200))
     {
         _last_change = inputs.now_ms();
         _state.set_sun_value(0);
     }
-    else if (inputs.green_has_been_pressed(200))
+    else if (inputs.right_has_been_pressed(200))
     {
         _last_change = inputs.now_ms();
         // When we increase luminosity with single click, we want only 4 different values
@@ -119,12 +119,12 @@ void Runner::_process_normal(const Inputs &inputs, const Outputs & outputs)
         }
         _state.set_sun_value(sun_value);
     }
-    else if (inputs.yellow_long_pressed(200))
+    else if (inputs.left_long_pressed(200))
     {
         _last_change = inputs.now_ms();
         _state.set_sun_value(outputs.sun().get_current_value() - 1);
     }
-    else if (inputs.green_long_pressed(200))
+    else if (inputs.right_long_pressed(200))
     {
         _last_change = inputs.now_ms();
         _state.set_sun_value(outputs.sun().get_current_value() + 1);
@@ -156,34 +156,34 @@ void Runner::_process_normal(const Inputs &inputs, const Outputs & outputs)
 void Runner::_process_alarm_select(const Inputs &inputs)
 {
     int8_t alarm_index = _state.get_alarm_index();
-    if (inputs.red_has_been_pressed())
+    if (inputs.middle_has_been_pressed())
     {
         if (alarm_index == NO_ALARM)
         {
             _state.switch_off_alarm();
-            CHANGE_STEP(State::Step::NORMAL, red_pressed);
+            CHANGE_STEP(State::Step::NORMAL, middle_pressed);
         }
         else if (alarm_index == NEW_ALARM)
         {
             _state.set_edit_time(_state.alarms().get_alarm(0));
-            CHANGE_STEP(State::Step::ALARM_SET_HOUR, red_pressed);
+            CHANGE_STEP(State::Step::ALARM_SET_HOUR, middle_pressed);
         }
         else
         {
             _state.set_alarm(_state.get_alarms().get_alarm(alarm_index));
-            CHANGE_STEP(State::Step::NORMAL, red_pressed);
+            CHANGE_STEP(State::Step::NORMAL, middle_pressed);
         }
     }
     else
     {
-        if (inputs.yellow_has_been_pressed())
+        if (inputs.left_has_been_pressed())
         {
             if (alarm_index == 0)
                 alarm_index = NO_ALARM;
             else
                 alarm_index--;
         }
-        else if (inputs.green_has_been_pressed())
+        else if (inputs.right_has_been_pressed())
         {
             if (alarm_index == NO_ALARM)
                 alarm_index = 0;
@@ -198,23 +198,23 @@ void Runner::_process_alarm_select(const Inputs &inputs)
 
 void Runner::_process_set_hour(const Inputs &inputs)
 {
-    if (inputs.red_has_been_pressed())
+    if (inputs.middle_has_been_pressed())
     {
         if(_state.get_step() == State::Step::ALARM_SET_HOUR)
         {
-            CHANGE_STEP(State::Step::ALARM_SET_MINUTE, red_pressed);
+            CHANGE_STEP(State::Step::ALARM_SET_MINUTE, middle_pressed);
         }
         else
         {
-            CHANGE_STEP(State::Step::TIME_SET_MINUTE, red_pressed);
+            CHANGE_STEP(State::Step::TIME_SET_MINUTE, middle_pressed);
         }
     }
-    else if (inputs.yellow_has_been_pressed() || inputs.yellow_long_pressed(long_press))
+    else if (inputs.left_has_been_pressed() || inputs.left_long_pressed(long_press))
     {
         Time alarm = _state.get_edit_time();
         _state.set_edit_time(alarm.add_hour(-1));
     }
-    else if (inputs.green_has_been_pressed() || inputs.green_long_pressed(long_press))
+    else if (inputs.right_has_been_pressed() || inputs.right_long_pressed(long_press))
     {
         Time alarm = _state.get_edit_time();
         _state.set_edit_time(alarm.add_hour(1));
@@ -223,7 +223,7 @@ void Runner::_process_set_hour(const Inputs &inputs)
 
 void Runner::_process_set_minute(const Inputs &inputs)
 {
-    if (inputs.red_has_been_pressed())
+    if (inputs.middle_has_been_pressed())
     {
         if(_state.get_step() == State::Step::ALARM_SET_MINUTE)
         {
@@ -234,15 +234,15 @@ void Runner::_process_set_minute(const Inputs &inputs)
             _state.alarms().save_time(_state.get_edit_time());
             _state.set_current_time(_state.get_edit_time());
         }
-        CHANGE_STEP(State::Step::NORMAL, red_pressed);
+        CHANGE_STEP(State::Step::NORMAL, middle_pressed);
         _last_change = inputs.now_ms();
     }
-    else if (inputs.yellow_has_been_pressed() || inputs.yellow_long_pressed(long_press))
+    else if (inputs.left_has_been_pressed() || inputs.left_long_pressed(long_press))
     {
         Time alarm = _state.get_edit_time();
         _state.set_edit_time(alarm.add_minute(-1));
     }
-    else if (inputs.green_has_been_pressed() || inputs.green_long_pressed(long_press))
+    else if (inputs.right_has_been_pressed() || inputs.right_long_pressed(long_press))
     {
         Time alarm = _state.get_edit_time();
         _state.set_edit_time(alarm.add_minute(1));
@@ -251,13 +251,13 @@ void Runner::_process_set_minute(const Inputs &inputs)
 
 void Runner::_process_alarm_playing(const Inputs &inputs)
 {
-    if (inputs.red_has_been_pressed())
+    if (inputs.middle_has_been_pressed())
     {
         _last_change = inputs.now_ms();
         _state.switch_off_alarm();
-        CHANGE_STEP(State::Step::NORMAL, red_pressed);
+        CHANGE_STEP(State::Step::NORMAL, middle_pressed);
     }
-    else if (inputs.green_has_been_pressed() || inputs.yellow_has_been_pressed())
+    else if (inputs.right_has_been_pressed() || inputs.left_has_been_pressed())
     {
         _last_change = inputs.now_ms();
         _state.snooze_alarm();
@@ -266,7 +266,7 @@ void Runner::_process_alarm_playing(const Inputs &inputs)
 
 void Runner::_process_off(const Inputs &inputs)
 {
-    if (inputs.red_has_been_pressed() || inputs.yellow_has_been_pressed() || inputs.green_has_been_pressed() )
+    if (inputs.middle_has_been_pressed() || inputs.left_has_been_pressed() || inputs.right_has_been_pressed() )
     {
         _last_change = inputs.now_ms();
         CHANGE_STEP(State::Step::NORMAL, "Button pressed");

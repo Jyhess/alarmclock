@@ -9,19 +9,19 @@
 class Inputs
 {
 public:
-    Inputs(uint8_t red_pin, uint8_t yellow_pin, uint8_t green_pin, uint8_t luminosity_pin, uint8_t vibration_pin);
+    Inputs(uint8_t middle_pin, uint8_t left_pin, uint8_t right_pin, uint8_t luminosity_pin, uint8_t vibration_pin);
 
     void setup();
     void loop();
 
     inline Rtc &rtc() { return _rtc; }
 
-    bool red_has_been_pressed(unsigned long threshold = 200) const;
-    bool yellow_has_been_pressed(unsigned long threshold = 200) const;
-    bool green_has_been_pressed(unsigned long threshold = 200) const;
-    unsigned long red_long_pressed(unsigned long threshold) const;
-    unsigned long yellow_long_pressed(unsigned long threshold) const;
-    unsigned long green_long_pressed(unsigned long threshold) const;
+    bool middle_has_been_pressed(unsigned long threshold = 200) const;
+    bool left_has_been_pressed(unsigned long threshold = 200) const;
+    bool right_has_been_pressed(unsigned long threshold = 200) const;
+    unsigned long middle_long_pressed(unsigned long threshold) const;
+    unsigned long left_long_pressed(unsigned long threshold) const;
+    unsigned long right_long_pressed(unsigned long threshold) const;
 
     int get_luminosity() const { return _luminosity.get_value(); }
     bool is_dark() const { return _luminosity.is_dark(); }
@@ -35,9 +35,9 @@ public:
 private:
     unsigned long _now_ms;
 
-    ButtonCapacitive _red;
-    ButtonCapacitive _yellow;
-    ButtonCapacitive _green;
+    ButtonCapacitive _middle;
+    ButtonCapacitive _left;
+    ButtonCapacitive _right;
     Luminosity _luminosity;
     Vibration _vibration;
 
