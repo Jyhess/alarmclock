@@ -36,6 +36,7 @@
 #define PIN_OLED_DC PIN_PB4
 #define PIN_OLED_CS PIN_PB5
 
+#define PIN_BUTTON_SEND PIN_PD5
 #define PIN_BUTTON_MIDDLE PIN_PD3
 #define PIN_BUTTON_LEFT PIN_PD2
 #define PIN_BUTTON_RIGHT PIN_PD4
@@ -50,7 +51,7 @@ Outputs g_outputs(
     PIN_OLED_CLOCK, PIN_OLED_DATA, PIN_OLED_CS, PIN_OLED_DC, PIN_OLED_RESET
 #endif
 );
-Inputs g_inputs(PIN_BUTTON_MIDDLE, PIN_BUTTON_LEFT, PIN_BUTTON_RIGHT, PIN_LIGHT_SENSOR, PIN_VIBRATION);
+Inputs g_inputs(PIN_BUTTON_SEND, PIN_BUTTON_MIDDLE, PIN_BUTTON_LEFT, PIN_BUTTON_RIGHT, PIN_LIGHT_SENSOR, PIN_VIBRATION);
 AlarmList g_alarm_list(g_inputs.rtc());
 State g_state(g_alarm_list);
 Runner g_runner(g_state);

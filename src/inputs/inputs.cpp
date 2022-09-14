@@ -1,8 +1,8 @@
 #include "inputs/inputs.h"
 #include "js_ms_diff.h"
 
-Inputs::Inputs(uint8_t middle_pin, uint8_t left_pin, uint8_t right_pin, uint8_t luminosity_pin, uint8_t vibration_pin)
- : _now_ms(0), _middle(middle_pin), _left(left_pin), _right(right_pin), _luminosity(luminosity_pin), _vibration(vibration_pin), _last_rtc_read(0)
+Inputs::Inputs(uint8_t send_pin, uint8_t middle_pin, uint8_t left_pin, uint8_t right_pin, uint8_t luminosity_pin, uint8_t vibration_pin)
+ : _now_ms(0), _middle(send_pin, middle_pin), _left(send_pin, left_pin), _right(send_pin, right_pin), _luminosity(luminosity_pin), _vibration(vibration_pin), _last_rtc_read(0)
 {
 }
 

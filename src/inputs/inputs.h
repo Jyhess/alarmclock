@@ -9,7 +9,7 @@
 class Inputs
 {
 public:
-    Inputs(uint8_t middle_pin, uint8_t left_pin, uint8_t right_pin, uint8_t luminosity_pin, uint8_t vibration_pin);
+    Inputs(uint8_t send_pin, uint8_t middle_pin, uint8_t left_pin, uint8_t right_pin, uint8_t luminosity_pin, uint8_t vibration_pin);
 
     void setup();
     void loop();

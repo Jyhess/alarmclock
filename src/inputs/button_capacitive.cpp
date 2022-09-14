@@ -4,17 +4,16 @@
 
 namespace
 {
+const int NB_SAMPLE = 30;
+const int THRESHOLD = 1000;
+} // namespace
 
-}
-
-ButtonCapacitive::ButtonCapacitive(uint8_t pin) : _pin(pin), _previous_state(false), _current_state(false), _press_time(0), _release_time(0)
+ButtonCapacitive::ButtonCapacitive(uint8_t send_pin, uint8_t read_pin) : _sensor(send_pin, read_pin), _previous_state(false), _current_state(false), _press_time(0), _release_time(0)
 {
 }
 
 void ButtonCapacitive::setup()
 {
-    pinMode(_pin, INPUT);
-
     _previous_state = read_state();
     _current_state = _previous_state;
 }
@@ -36,7 +35,7 @@ void ButtonCapacitive::loop(unsigned long now_ms)
 
 bool ButtonCapacitive::read_state()
 {
-    return digitalRead(_pin) == HIGH;
+    return _sensor.capacitiveSensor(NB_SAMPLE) > THRESHOLD;
 }
 
 bool ButtonCapacitive::has_changed() const

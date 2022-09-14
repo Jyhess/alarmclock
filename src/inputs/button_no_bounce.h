@@ -1,14 +1,12 @@
 #pragma once
 
-#include <CapacitiveSensor.h>
-
 #include <stdint.h>
 
 
-class ButtonCapacitive
+class ButtonNoBounce
 {
 private:
-    CapacitiveSensor _sensor;
+    uint8_t _pin;
 
     bool _previous_state;
     bool _current_state;
@@ -16,7 +14,7 @@ private:
     unsigned long _release_time;
 
 public:
-    explicit ButtonCapacitive(uint8_t send_pin, uint8_t read_pin);
+    explicit ButtonNoBounce(uint8_t pin);
 
     void setup();
     void loop(unsigned long now_ms);
