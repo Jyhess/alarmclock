@@ -4,6 +4,7 @@
 #include "state.h"
 #include "runner.h"
 
+#ifdef TEST_BOARD
 // Module connection pins (Digital Pins)
 #define PIN_LIGHT_SENSOR PIN_A0
 #define PIN_BUZZER 5
@@ -21,6 +22,26 @@
 #define PIN_BUTTON_LEFT 2
 #define PIN_BUTTON_RIGHT 3
 #define PIN_VIBRATION PIN_A1
+
+#else
+#define PIN_LIGHT_SENSOR PIN_A3
+#define PIN_BUZZER PIN_PD6
+#define PIN_SUN_LOW PIN_PB3
+#define PIN_SUN_MID PIN_PB2
+#define PIN_SUN_HIGH PIN_PB1
+
+#define PIN_OLED_CLOCK PIN_PD7
+#define PIN_OLED_DATA PIN_PB0
+#define PIN_OLED_RESET U8X8_PIN_NONE
+#define PIN_OLED_DC PIN_PB4
+#define PIN_OLED_CS PIN_PB5
+
+#define PIN_BUTTON_MIDDLE PIN_PD3
+#define PIN_BUTTON_LEFT PIN_PD2
+#define PIN_BUTTON_RIGHT PIN_PD4
+#define PIN_VIBRATION PIN_A2
+
+#endif
 
 Outputs g_outputs(
     PIN_BUZZER, PIN_SUN_LOW, PIN_SUN_MID, PIN_SUN_HIGH
